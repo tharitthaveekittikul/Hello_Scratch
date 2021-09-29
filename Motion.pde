@@ -5,8 +5,8 @@ class Motion extends Command{
   Node motion;
   Motion(String name_, String step_){
     motion = new Node("motion");
+    step = step_ ;
     motion.addLeft(step);
-    step = step_ ; 
     name = name_ ;
   }
   

@@ -11,4 +11,8 @@ class Tree extends Command{
   ArrayList<Node> getStartNode(){
     return startNode; 
   }
+  
+  void addchild(Node r){
+    startNode.add(r);
+  }
 }
