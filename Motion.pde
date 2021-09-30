@@ -35,6 +35,11 @@ class Motion extends Command{
     return y ; 
   }
   
+  void setPosition(int x_, int y_){
+    x = x_;
+    y = y_;
+  }
+  
   boolean contains(){
     if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
       println("in Motion");

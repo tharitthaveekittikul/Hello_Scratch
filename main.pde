@@ -58,26 +58,26 @@ void setup(){
 
 void checkFunction(Command c){
   t.addchild(c.getNode());
-  for (int j=0 ; j < t.getStartNode().size() ; j++){
-    if( t.getStartNode().get(j).getData().equals("repeat") ){ //if function is Repeat
-      for ( int i=0 ; i < Integer.parseInt(t.getStartNode().get(j).getLeft()) ; i++){
-        if (t.getStartNode().get(j).getRight().equals("motion")){
+  for (int i=0 ; i < t.getStartNode().size() ; i++){
+    if( t.getStartNode().get(i).getData().equals("repeat") ){ //if function is Repeat
+      for ( int j=0 ; j < Integer.parseInt(t.getStartNode().get(i).getLeft()) ; j++){
+        if (t.getStartNode().get(i).getRight().equals("motion")){
           //println(motions.get(motions.size()-1).getLeft());
-           cat.setStep(motions.get(motions.size()-1).getLeft());
+          cat.setStep(motions.get(motions.size()-1).getLeft());
           cat.display();
-          println("step = " + i + " " + motions.get(motions.size()-1).getLeft() + " " + cat.x);
+          println("step = " + j + " " + motions.get(motions.size()-1).getLeft() + " " + cat.x);
           cat.Move();
           
           draw();
         }
       }
     }
-    if ( t.getStartNode().get(j).getData().equals("conditionif") ){
-      if (t.getStartNode().get(j).getLeft().equals("truth")){
+    if ( t.getStartNode().get(i).getData().equals("conditionif") ){
+      if (t.getStartNode().get(i).getLeft().equals("truth")){
         
-        if ( t.getStartNode().get(j).getNodeLeft().getLeft() == "true" ){
+        if ( t.getStartNode().get(i).getNodeLeft().getLeft() == "true" ){
           
-         if (t.getStartNode().get(j).getRight().equals("motion")){
+         if (t.getStartNode().get(i).getRight().equals("motion")){
             
             cat.setStep((motions.get(motions.size()-1).getLeft()));
             cat.Move();
@@ -86,7 +86,6 @@ void checkFunction(Command c){
       }
     }
   }
-  
 }
 
 void mouseClicked(){
@@ -121,7 +120,7 @@ void mouseClicked(){
 void mouseDragged(){
   //if Button-------------------------------------------------------------------------------------------------------------
   if (conditionButton.pressed()){
-    if(checkEmpty()){
+    if(firstValBox.getValue() != "" && checkOperator() && secondValBox.getValue() != ""){
       println("use if");
       ifList.add(new ConditionIf("conditionIf", firstValBox.getValue(), opIfBox.getValue(), secondValBox.getValue()));
       firstValBox.resetTextvalue();
@@ -131,11 +130,11 @@ void mouseDragged(){
       println("please insert value");
       //println(opIfBox.getValue());
     }
-    
   }
+  
   //if else Button------------------------------------------------------------------------------------------------------
   if (conditionElseButton.pressed()){
-    if(checkEmpty()){
+    if(firstVal2Box.getValue() != "" && checkOperator() && secondVal2Box.getValue() != ""){
       println("use if else");
       IfElseList.add(new ConditionIfElse("conditionIfElse", firstVal2Box.getValue(), opIfElseBox.getValue(), secondVal2Box.getValue())); 
       firstVal2Box.resetTextvalue();
@@ -148,7 +147,7 @@ void mouseDragged(){
   
   //repeatButton---------------------------------------------------------------------------------------------------------------
   if(repeatButton.pressed()){
-    if(checkEmpty()){
+    if(repeatBox.getValue() != ""){
       println("use repeat");
       repeatList.add(new Repeat(repeatBox.getValue()));
       repeatBox.resetTextvalue();
@@ -161,12 +160,13 @@ void mouseDragged(){
   
   //moveButton-----------------------------------------------------------------------------------------------------------------
   if(moveButton.pressed()){
-    if(checkEmpty()){
+    if(moveStepBox.getValue() != ""){
       println("use move");
       motions.add(new Motion("Move",moveStepBox.getValue()));
       moveStepBox.resetTextvalue();
+      println(motions.size());
       
-      //repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
+      repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
       
     }else{
       println("please insert value");
@@ -232,10 +232,14 @@ void draw(){
    
    //Move Block-----------------------------------------
   for(int i = 0; i < motions.size(); i++){
-       //motions.get(i).releaseDrag();
-       motions.get(i).display();
-       motions.get(i).drag();
-   }
+      //int x_move = motions.get(i).getX();
+      //int y_move = motions.get(i).getY();
+      //println("location X move :"+ x_move);
+      //println("location Y move :"+ y_move);
+      connectBlock();
+      motions.get(i).display();
+      motions.get(i).drag();
+  }
   
   showCoordinates();
 }
@@ -249,20 +253,6 @@ void showCoordinates(){
   fill(0);
   textSize(16);
   text("x: " + mouseX + "   y = " + mouseY,width/2 - 80,height - 50);
-}
-
-boolean checkEmpty(){
-  if(moveStepBox.getValue() != "" || repeatBox.getValue() != ""){
-    return true;
-  }else if(firstValBox.getValue() != "" && checkOperator() && secondValBox.getValue() != ""){
-    //println("In if");
-    return true;
-  }else if(firstVal2Box.getValue() != "" && checkOperator() && secondVal2Box.getValue() != ""){
-    //println("In if else");
-    return true;
-  }
-  return false;
-  
 }
 
 boolean checkOperator(){
@@ -279,4 +269,37 @@ boolean checkOperator(){
     return true;
   }
   return false;
+}
+
+void connectBlock(){
+  int x_move;
+  int y_move;
+  //int x_move2;
+  //int y_move2;
+  int x_repeat;
+  int y_repeat;
+  for(int i = 0; i < motions.size(); i++){
+    for(int j = 0; j < repeatList.size(); j++){          
+      x_move = motions.get(i).getX();
+      y_move = motions.get(i).getY();
+      x_repeat = repeatList.get(j).getX();
+      y_repeat = repeatList.get(j).getY();
+      if(x_move >= x_repeat && x_move <= x_repeat + 130 && y_move >= y_repeat && y_move <= y_repeat + 30){
+        motions.get(i).setPosition(x_repeat+25, y_repeat+30);
+      }
+    }
+  }
+  //if(motions.size() > 1){
+  //  for(int i = 0; i < motions.size(); i++){
+  //    x_move = motions.get(i).getX();
+  //    y_move = motions.get(i).getY();
+  //    x_move2 = motions.get(motions.size() - 1).getX();
+  //    y_move2 = motions.get(motions.size() - 1).getY();
+  //    if(x_move >= x_move2 && x_move <= x_move2 + 120 && y_move >= y_move2 && y_move <= y_move2 + 25){
+  //      motions.get(i).setPosition(x_move2, y_move2+30);
+  //      break;
+  //    }
+    
+  //  }
+  //}
 }

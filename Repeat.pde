@@ -24,6 +24,20 @@ class Repeat extends Command{
     return repeat.data;
   }
   
+  int getX(){
+    return x ;
+  }
+  
+  int getY(){
+    return y ; 
+  }
+  
+  void setPosition(int x_, int y_){
+    x = x_;
+    y = y_;
+  }
+   
+  
   void setRight(Node command){
     repeat.setRight(command);
   }
