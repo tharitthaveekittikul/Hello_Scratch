@@ -32,7 +32,7 @@ class ConditionIfElse extends Command{
     conditionifelse.setLeft(truth);
     //conditionifelse.setRight(command);
     
-    if (operator.equals("==")){
+    if (operator.equals("=")){
       if ( variable1 == variable2 ){
         truth.setLeft(TRUE);
       } else {

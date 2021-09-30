@@ -1,4 +1,5 @@
 class Command{
+  int x , y;
   String data;
   Node root;
   Node leftChild;
@@ -25,5 +26,10 @@ class Command{
   
   Node getNode(){
     return root;
+  }
+  
+  void setPosition(int x_, int y_){
+    x = x_;
+    y = y_;
   }
 }

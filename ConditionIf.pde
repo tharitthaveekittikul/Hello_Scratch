@@ -31,7 +31,7 @@ class ConditionIf extends Command{
     conditionif.setLeft(truth);
     conditionif.setRight(command);
     
-    if (operator.equals("==")){
+    if (operator.equals("=")){
       if ( variable1 == variable2 ){
         truth.setLeft(TRUE);
       } else {

@@ -42,13 +42,13 @@ void setup(){
   moveButton = new Button("Move:",50,200,150,40);
   
    //Textbox---------------------------------------------
-  firstValBox = new TextBox(115,55,50,30,3);//if
-  opIfBox = new TextBox(180,55,30,30,2);
-  secondValBox = new TextBox(225,55,50,30,3);
+  firstValBox = new TextBox(115,55,50,30,6);//if
+  opIfBox = new TextBox(180,55,30,30,3);
+  secondValBox = new TextBox(225,55,50,30,6);
   ifList = new ArrayList<ConditionIf>();
-  firstVal2Box = new TextBox(130,105,50,30,3);//if elsse 
-  opIfElseBox = new TextBox(188,105,30,30,2);
-  secondVal2Box = new TextBox(225,105,50,30,3);
+  firstVal2Box = new TextBox(130,105,50,30,6);//if elsse 
+  opIfElseBox = new TextBox(188,105,30,30,3);
+  secondVal2Box = new TextBox(225,105,50,30,6);
   IfElseList = new ArrayList<ConditionIfElse>(); 
   repeatBox = new TextBox(140,155,50,30,3);//repeat 
   repeatList = new ArrayList<Repeat>();
@@ -129,6 +129,7 @@ void mouseDragged(){
       secondValBox.resetTextvalue();
     }else{
       println("please insert value");
+      //println(opIfBox.getValue());
     }
     
   }
@@ -253,9 +254,28 @@ void showCoordinates(){
 boolean checkEmpty(){
   if(moveStepBox.getValue() != "" || repeatBox.getValue() != ""){
     return true;
-  }else if(firstValBox.getValue() != "" && opIfBox.getValue() != "" && secondValBox.getValue() != ""){
+  }else if(firstValBox.getValue() != "" && checkOperator() && secondValBox.getValue() != ""){
+    //println("In if");
     return true;
-  }else if(firstVal2Box.getValue() != "" && opIfElseBox.getValue() != "" && secondVal2Box.getValue() != ""){
+  }else if(firstVal2Box.getValue() != "" && checkOperator() && secondVal2Box.getValue() != ""){
+    //println("In if else");
+    return true;
+  }
+  return false;
+  
+}
+
+boolean checkOperator(){
+  if(opIfBox.getValue().equals("=") || opIfBox.getValue().equals(">") || 
+  opIfBox.getValue().equals("<") || opIfBox.getValue().equals(">=") || 
+  opIfBox.getValue().equals("<=") || opIfBox.getValue().equals("!=") ){
+    //println("checkif");
+    return true;
+  }
+  if(opIfElseBox.getValue().equals("=") || opIfElseBox.getValue().equals(">") || 
+  opIfElseBox.getValue().equals("<") || opIfElseBox.getValue().equals(">=") || 
+  opIfElseBox.getValue().equals("<=") || opIfElseBox.getValue().equals("!=") ){
+    //println("checkifelse");
     return true;
   }
   return false;

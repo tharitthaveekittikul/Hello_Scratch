@@ -15,7 +15,7 @@ class Model{
     image(img,x,y,w,h);
     fill(0);
     textSize(16);
-    text("x = " + x + " ,  y = " + y, x + 55,y - 10);
+    text("Cat position x = " + x + " ,  y = " + y, 1130 ,430);
     contains();
   }
   
