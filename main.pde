@@ -108,6 +108,17 @@ void mouseClicked(){
     //checkFunction(con);
   //}
   
+
+  //startButton-----------------------------------------------------------------------------------------------------------------
+  if(startButton.pressed()){
+    println("start");
+    t = new Tree();
+    checkFunction(repeatList.get(repeatList.size()-1));
+    
+  }
+}
+
+void mouseDragged(){
   //if Button-------------------------------------------------------------------------------------------------------------
   if (conditionButton.pressed()){
     if(checkEmpty()){
@@ -175,15 +186,7 @@ void mouseClicked(){
     //  }
     //}
   }
-  //startButton-----------------------------------------------------------------------------------------------------------------
-  if(startButton.pressed()){
-    println("start");
-    t = new Tree();
-    checkFunction(repeatList.get(repeatList.size()-1));
-    
-  }
 }
-
 void draw(){
   background(175);
   line(300,0,300,height); //left line

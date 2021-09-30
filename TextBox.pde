@@ -40,7 +40,7 @@ class TextBox{
         keyCounter = 0;
         previousKeyCounter = 0;
       }
-      if(keyPressed && c != key){
+      if(keyPressed && c != key && keyCode != SHIFT){
         keyCounter = millis();
         c = key;
         if(c == BACKSPACE){

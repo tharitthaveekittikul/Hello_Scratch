@@ -13,9 +13,7 @@ class Motion extends Command{
   String getLeft(){
     return motion.getLeft();
   }
-  String getRight(){
-    return motion.getRight();
-  }
+
   String getData(){
     return motion.data;
   }
