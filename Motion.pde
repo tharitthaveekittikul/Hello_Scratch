@@ -1,5 +1,6 @@
 class Motion extends Command{
-  int x = 330 , y = 30, w = 120, h = 30;
+  int w = 120, h = 30;
+  int x = mouseX-(w/2), y = mouseY-(h/2);
   String step ;
   String name;
   Node motion;
@@ -47,8 +48,9 @@ class Motion extends Command{
       if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
         x = x + (mouseX - pmouseX);
         y = y + (mouseY - pmouseY);
+        //return true;
       }
-    }  
+    }
   }
   
 }

@@ -168,7 +168,7 @@ void mouseDragged(){
       
       //-------PAO ADD-------
       
-      repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
+      //repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
       
     }else{
       println("please insert value");
@@ -234,6 +234,7 @@ void draw(){
    
    //Move Block-----------------------------------------
   for(int i = 0; i < motions.size(); i++){
+       //motions.get(i).releaseDrag();
        motions.get(i).display();
        motions.get(i).drag();
    }

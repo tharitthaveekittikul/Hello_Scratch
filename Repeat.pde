@@ -1,5 +1,6 @@
 class Repeat extends Command{
-  int x = 330 , y = 30, w = 130, h = 30;
+  int w = 130, h = 30;
+  int x = mouseX-(w/2) , y = mouseY-(h/2);
   String round ;
   Node repeat;
   Node command;
@@ -48,6 +49,7 @@ class Repeat extends Command{
   void drag(){
     if(mousePressed){
       if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        
         x = x + (mouseX - pmouseX);
         y = y + (mouseY - pmouseY);
       }

@@ -1,5 +1,6 @@
 class ConditionIfElse extends Command{
-  int x = 330, y = 30, w = 150, h = 30;
+  int w = 170, h = 30;
+  int x = mouseX-(w/2), y = mouseY-(h/2) ;
   String name;
   int variable1;
   String operator;
@@ -99,8 +100,6 @@ class ConditionIfElse extends Command{
   boolean contains(){
     if(mousePressed){
       if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
-        x = x + (mouseX - pmouseX);
-        y = y + (mouseY - pmouseY);
         return true;
       }
     }    
