@@ -1,4 +1,3 @@
-//testpush
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,9 +151,8 @@ void mouseDragged(){
       println("use repeat");
       repeatList.add(new Repeat(repeatBox.getValue()));
       repeatBox.resetTextvalue();
-      //-------PAO ADD------
-      
-      
+       
+         
     }else{
       println("please insert value");   
     }
@@ -166,8 +164,6 @@ void mouseDragged(){
       println("use move");
       motions.add(new Motion("Move",moveStepBox.getValue()));
       moveStepBox.resetTextvalue();
-      
-      //-------PAO ADD-------
       
       //repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
       
