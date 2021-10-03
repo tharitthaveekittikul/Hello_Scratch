@@ -6,10 +6,6 @@ class ConditionIf extends Command{
   String operator;
   int variable2;
   Node conditionif;
-  Node truth;
-  Node command;
-  Node TRUE;
-  Node FALSE;
   ConditionIf(String name_, String v1_, String o_, String v2_){
     name = name_;
     variable1 = Integer.parseInt(v1_);
@@ -17,41 +13,32 @@ class ConditionIf extends Command{
     variable2 = Integer.parseInt(v2_);
     
     conditionif = new Node(name);
-    data = conditionif.data;
-    
-    truth = new Node("truth");
-    truth.addLeft("helloworld"); //aw wai plean wa pen true or false for leak chai
-    
-    TRUE = new Node("true");
-    FALSE = new Node("false");
-    
-    conditionif.addLeft(null);
-    conditionif.addRight(null);
-    
-    conditionif.setLeft(truth);
-    conditionif.setRight(command);
     
     if (operator.equals("=")){
       if ( variable1 == variable2 ){
-        truth.setLeft(TRUE);
+        conditionif.addnewChild("TRUE");
       } else {
-        truth.setLeft(FALSE); 
+        conditionif.addnewChild("FALSE");
       }
     }
     if (operator.equals(">")){
       if ( variable1 > variable2 ){
-        truth.setLeft(TRUE);
+        conditionif.addnewChild("TRUE");
       } else {
-        truth.setLeft(FALSE); 
+        conditionif.addnewChild("FALSE"); 
       }
     }
     if (operator.equals("<")){
       if ( variable1 < variable2 ){
-        truth.setLeft(TRUE);
+        conditionif.addnewChild("TRUE");
       } else {
-        truth.setLeft(FALSE); 
+        conditionif.addnewChild("FALSE");  
       }
     }    
+  }
+  
+  void addCommand(Node command){
+    conditionif.addexistChild(command);
   }
   
   void display(){
@@ -61,32 +48,6 @@ class ConditionIf extends Command{
     fill(0);
     textSize(20);
     text( " If  : " + variable1 +"  "+ operator +"  "+ variable2, x+10, y+15);
-  }
-  
-  String getLeft(){
-    return conditionif.getLeft();
-  }
-  String getRight(){
-    return conditionif.getRight();
-  }
-  String getData(){
-    return conditionif.data;
-  }
-  
-  void setRight(Node command){
-    conditionif.setRight(command);
-  }
-  
-  void setLeft(Node command){
-    conditionif.setLeft(command); 
-  }
-  
-  Node getNodeLeft(){
-    return conditionif.leftChild;
-  }
-  
-  Node getNodeRight(){
-    return conditionif.rightChild;
   }
   Node getNode(){
     return conditionif;

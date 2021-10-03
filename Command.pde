@@ -1,27 +1,27 @@
 class Command{
   int x , y;
-  String data;
+  String val; //data
+  ArrayList<Node> children;
   Node root;
-  Node leftChild;
-  Node rightChild;
-
-  String getData(){
-    return data;
+  
+  void addnewChild(String val){
+    children.add(new Node(val));
   }
   
-  String getLeft(){
-    return leftChild.data;
-  }
-  String getRight(){
-    return rightChild.data;
-  }
-   
-  Node getNodeLeft(){
-    return leftChild;
+  void addexistChild(Node node){
+    children.add(node); 
   }
   
-  Node getNodeRight(){
-    return rightChild;
+  String getvalChild(int n){ // n = index in children
+    return children.get(n).val;
+  }
+  
+  Node getnodeChild(int n){ // n = index in children
+    return children.get(n);
+  }
+  
+  int getchildSize(){
+    return children.size();
   }
   
   Node getNode(){

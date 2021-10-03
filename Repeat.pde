@@ -4,46 +4,26 @@ class Repeat extends Command{
   String round ;
   Node repeat;
   Node command;
-  String data;
+  String val;
+  String name;
   
-  Repeat(String n){
-    repeat = new Node("repeat");
-    data = repeat.data;
-    repeat.addLeft(n);
-    repeat.addRight(null);
+  Repeat(String name_, String n){
+    name = name_;
+    repeat = new Node(name);
+    val = repeat.val; //"repeat"
     round = n;
+    repeat.addnewChild(round);
+  }
+
+  
+  void addCommand(Node command){
+    repeat.addexistChild(command);
   }
   
-  String getLeft(){
-    return repeat.getLeft();
-  }
-  String getRight(){
-    return repeat.getRight();
-  }
-  String getData(){
-    return repeat.data;
-  }
-  
-  int getX(){
-    return x ;
-  }
-  
-  int getY(){
-    return y ; 
-  }
-  
-  void setPosition(int x_, int y_){
-    x = x_;
-    y = y_;
-  }
-   
-  
-  void setRight(Node command){
-    repeat.setRight(command);
-  }
   Node getNode(){
     return repeat;
   }
+  
   void display(){
     fill(155,155,155);
     stroke(1);
