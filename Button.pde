@@ -51,6 +51,12 @@ class Button{
         return true;
       }
     }
+    if (name == "Run"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseClick()
+        return true;
+      }
+    }
     return false;
   }  
 }

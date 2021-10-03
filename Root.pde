@@ -1,31 +1,31 @@
-class Motion extends Command{
+class Root extends Command{
   int w = 150, h = 30;
   int x = mouseX-(w/2), y = mouseY-(h/2);
-  String step ;
+  String order;
   String name;
-  Node motion;
+  Node Root;
   
-  Motion(String name_, String step_){
-    motion = new Node("motion");
-    step = step_ ;
-    motion.addLeft(step);
+  Root(String name_, String order_){
+    Root = new Node("Root");
+    order = order_;    
     name = name_ ;
   }
   
   String getLeft(){
-    return motion.getLeft();
+    return Root.getLeft();
   }
 
   String getData(){
-    return motion.data;
+    return Root.data;
   }
-   void display(){
+  
+  void display(){
     fill(155,155,155);
     stroke(1);
     rect(x,y,w,h);
     fill(0);
     textSize(20);
-    text(name + " = " + step , x+10, y+15);
+    text(name+"  "+order, x+10, y+15);
   }
   
   String getname(){
@@ -65,9 +65,11 @@ class Motion extends Command{
   boolean contains(){
     if(mousePressed){
       if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
+        println("true");
         return true;
       }
     }    
+    println("false");
     return false;
   }
   

@@ -1,6 +1,7 @@
 class ConditionIfElse extends Command{
-  int w = 170, h = 30;
+  int w = 200, h = 30;
   int x = mouseX-(w/2), y = mouseY-(h/2) ;
+  int offset;
   String name;
   int variable1;
   String operator;
@@ -11,6 +12,7 @@ class ConditionIfElse extends Command{
   Node commandfalse;
   Node TRUE;
   Node FALSE;
+  
   ConditionIfElse(String name_, String v1_ , String o_ , String v2_){
     name = name_;
     variable1 = Integer.parseInt(v1_);
@@ -55,22 +57,6 @@ class ConditionIfElse extends Command{
     }    
   }
   
-  void display(){
-    fill(155,155,155);
-    stroke(1);
-    rect(x,y,w,h);
-    fill(0);
-    textSize(20);
-    text( " If : " + variable1 +"  "+ operator +"  "+ variable2, x+10, y+15);
-    fill(155,155,155);
-    stroke(1);
-    rect(x,y+60,w,h);
-    fill(0);
-    textSize(20);
-    text( " Else : ", x+5, y+75); 
-    
-  }
-  
   String getLeft(){
     return conditionifelse.getLeft();
   }
@@ -79,6 +65,36 @@ class ConditionIfElse extends Command{
   }
   String getData(){
     return conditionifelse.data;
+  }
+  
+  String getname(){
+    return name;
+  }
+  
+  int getX(){
+    return x ;
+  }
+  
+  int getY(){
+    return y ; 
+  }
+  
+  int getW(){
+    return w;
+  }
+  
+  int getH(){
+    return h;
+  }
+  
+  void setGroupSize(int groupsize_){
+    groupsize = 1 + groupsize_ ;
+
+  }
+  
+  void setPosition(int x_, int y_){
+    x = x_;
+    y = y_;
   }
   
   void setRight(Node command){
@@ -97,6 +113,32 @@ class ConditionIfElse extends Command{
     return conditionifelse.rightChild;
   }
   
+  void display(){
+    offset = h*groupsize;
+    fill(155,155,155);
+    stroke(1);
+    rect(x,y,w,h);
+    fill(0);
+    textSize(20);
+    text( " If : " + variable1 +"  "+ operator +"  "+ variable2, x+10, y+15);
+    fill(155,155,155);
+    stroke(1);
+    rect(x,y+offset,w,h);
+    fill(0);
+    textSize(20);
+    text( " Else : ", x+5, y+offset+15); 
+    
+  }
+  
+  void drag(){
+    if(mousePressed){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        x = x + (mouseX - pmouseX);
+        y = y + (mouseY - pmouseY);
+      }
+    }
+  }
+  
   boolean contains(){
     if(mousePressed){
       if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
@@ -106,12 +148,4 @@ class ConditionIfElse extends Command{
     return false;
   }
   
-  void drag(){
-    if(mousePressed){
-      if((mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h) || (mouseX >= x && mouseX <= x + w && mouseY >= y + 60 && mouseY <= y + 60 + h)){
-        x = x + (mouseX - pmouseX);
-        y = y + (mouseY - pmouseY);
-      }
-    }  
-  }
 }
