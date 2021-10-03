@@ -31,6 +31,7 @@ class Model{
   void Move(){
     x = x + getStep();
     println("move by " + x);
+    delay(100);
   } 
   
   void checkEdges(){
