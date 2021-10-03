@@ -1,23 +1,25 @@
 class Command{
   int x, y, w, h;
+  String val; //data
+  ArrayList<Node> children;
   String name;
   String data;
   int groupsize = 1;
   Node root;
-  Node leftChild;
-  Node rightChild;
+  
+  void addnewChild(String val){
+    children.add(new Node(val));
+  }
+  
+  void addexistChild(Node node){
+    children.add(node); 
+  }
+  
+  String getvalChild(int n){ // n = index in children
+    return children.get(n).val;
+  }
+  
 
-  String getData(){
-    return data;
-  }
-  
-  String getLeft(){
-    return leftChild.data;
-  }
-  String getRight(){
-    return rightChild.data;
-  }
-  
   String getname(){
     return name;
   }
@@ -41,13 +43,14 @@ class Command{
   int getSize(){
     return groupsize;
   }
-   
-  Node getNodeLeft(){
-    return leftChild;
+
+  Node getnodeChild(int n){ // n = index in children
+    return children.get(n);
+
   }
   
-  Node getNodeRight(){
-    return rightChild;
+  int getchildSize(){
+    return children.size();
   }
   
   Node getNode(){

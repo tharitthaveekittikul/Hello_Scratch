@@ -5,25 +5,19 @@ class Repeat extends Command{
   String round ;
   Node repeat;
   Node command;
-  String data;
+  String val;
   
   Repeat(String name_, String n){
-    repeat = new Node("repeat");
-    data = repeat.data;
-    repeat.addLeft(n);
-    repeat.addRight(null);
-    round = n;
     name = name_ ;
+    repeat = new Node(name);
+    val = repeat.val; //"repeat"
+    round = n;
+    repeat.addnewChild(round);
   }
+
   
-  String getLeft(){
-    return repeat.getLeft();
-  }
-  String getRight(){
-    return repeat.getRight();
-  }
-  String getData(){
-    return repeat.data;
+  void addCommand(Node command){
+    repeat.addexistChild(command);
   }
   
   String getname(){
@@ -50,11 +44,7 @@ class Repeat extends Command{
     x = x_;
     y = y_;
   }
-   
   
-  void setRight(Node command){
-    repeat.setRight(command);
-  }
   Node getNode(){
     return repeat;
   }

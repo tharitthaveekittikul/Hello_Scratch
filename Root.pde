@@ -11,14 +11,6 @@ class Root extends Command{
     name = name_ ;
   }
   
-  String getLeft(){
-    return Root.getLeft();
-  }
-
-  String getData(){
-    return Root.data;
-  }
-  
   void display(){
     fill(155,155,155);
     stroke(1);

@@ -87,6 +87,36 @@ void setup(){
 //  }
 //}
 
+void traverse(Command c){
+  for (int i = 0 ; i < c.getchildSize() ; i++){
+    if ( c.getvalChild(i).equals("move") ){
+      cat.setStep(c.getnodeChild(i).getvalChild(0));
+      cat.Move();
+    }
+    if ( c.getvalChild(i).equals("repeat") ){
+      int number = Integer.parseInt(c.getnodeChild(i).getvalChild(0)); //n of repeat
+      for ( int j = 0 ; j < number ; j++) {
+        traverse(c.getnodeChild(i));
+      }
+    }
+    if ( c.getvalChild(i).equals("if") ){
+      if ( c.getnodeChild(i).getvalChild(0).equals("TRUE")){
+        traverse(c.getnodeChild(i)); 
+      }
+    }
+    if ( c.getvalChild(i).equals("ifelse") ){
+      if ( c.getnodeChild(i).getvalChild(0).equals("TRUE")){
+        println("do ifelse => true");
+        traverse(c.getnodeChild(i).getnodeChild(1)); 
+      }
+      if ( c.getnodeChild(i).getvalChild(0).equals("FALSE")){
+        println("do ifelse => false");
+        traverse(c.getnodeChild(i).getnodeChild(2)); 
+      }
+    }
+  }
+}
+
 void mouseClicked(){
   //if(true){ //pressed repeat button and parameter 3
 
@@ -110,7 +140,27 @@ void mouseClicked(){
   if(startButton.pressed()){
     println("start");
     t = new Tree();
+
     //checkFunction(repeatList.get(repeatList.size()-1));
+
+    //MANUAL TEST
+    Node start = new Node("start");
+    Repeat r1 = new Repeat("repeat","3");
+    start.addexistChild(r1.getNode());
+    ConditionIf if1 = new ConditionIf("if","3",">","2");
+    Motion m1 = new Motion("move","10");
+    if1.addCommand(m1.getNode());
+    r1.addCommand(if1.getNode());
+    ConditionIf if2 = new ConditionIf("if","3",">","2");
+    start.addexistChild(if2.getNode());
+    ConditionIfElse ifelse = new ConditionIfElse("ifelse","3",">","2");
+    if2.addCommand(ifelse.getNode());
+    Motion m2 = new Motion("move","20");
+    ifelse.addtrueCommand(m2.getNode());
+    Motion m3 = new Motion("move","30");
+    ifelse.addfalseCommand(m3.getNode());
+    traverse(start);
+    println("FINISH");
   }
   
   if(flagButton.pressed()){
@@ -155,8 +205,8 @@ void mouseDragged(){
       println("use repeat");
       allBlock.add(new Repeat("repeat", repeatBox.getValue()));
       repeatBox.resetTextvalue();
-       
-         
+      //repeatList.add(new Repeat(repeatBox.getValue()));
+
     }else{
       println("please insert value");   
     }
@@ -168,6 +218,10 @@ void mouseDragged(){
       println("use move");
       allBlock.add(new Motion("Move",moveStepBox.getValue()));
       moveStepBox.resetTextvalue();
+
+      
+      //repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
+
       
       //repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
     }else{
@@ -204,7 +258,6 @@ void draw(){
   moveStepBox.draw();
   repeatBox.draw();
   sortBlockorder();
-  connectBlock();
   runCat();   
   
   //Block-----------------------------------------

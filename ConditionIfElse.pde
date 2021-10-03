@@ -10,8 +10,8 @@ class ConditionIfElse extends Command{
   Node truth;
   Node commandtrue;
   Node commandfalse;
-  Node TRUE;
-  Node FALSE;
+  Node ifTRUE;
+  Node ifFALSE;
   
   ConditionIfElse(String name_, String v1_ , String o_ , String v2_){
     name = name_;
@@ -20,53 +20,44 @@ class ConditionIfElse extends Command{
     variable2 = Integer.parseInt(v2_);
     
     conditionifelse = new Node(name);
-    data = conditionifelse.data;
-    
-    truth = new Node("truth");
-    truth.addLeft("helloworld"); //aw wai plean wa pen true or false for leak chai
-    
-    TRUE = new Node("true");
-    FALSE = new Node("false");
-    
-    conditionifelse.addLeft(null);
-    conditionifelse.addRight(null);
-    
-    conditionifelse.setLeft(truth);
-    //conditionifelse.setRight(command);
     
     if (operator.equals("=")){
       if ( variable1 == variable2 ){
-        truth.setLeft(TRUE);
+        conditionifelse.addnewChild("TRUE");
       } else {
-        truth.setLeft(FALSE); 
+        conditionifelse.addnewChild("FALSE");
       }
     }
     if (operator.equals(">")){
       if ( variable1 > variable2 ){
-        truth.setLeft(TRUE);
+        conditionifelse.addnewChild("TRUE");
       } else {
-        truth.setLeft(FALSE); 
+        conditionifelse.addnewChild("FALSE"); 
       }
     }
     if (operator.equals("<")){
       if ( variable1 < variable2 ){
-        truth.setLeft(TRUE);
+        conditionifelse.addnewChild("TRUE");
       } else {
-        truth.setLeft(FALSE); 
+        conditionifelse.addnewChild("FALSE");  
       }
-    }    
+    }
+    
+    ifTRUE = new Node("ifTRUE");
+    ifFALSE = new Node("ifFALSE");
+    
+    conditionifelse.addexistChild(ifTRUE);
+    conditionifelse.addexistChild(ifFALSE);
+    
   }
   
-  String getLeft(){
-    return conditionifelse.getLeft();
+  void addtrueCommand(Node command){
+    ifTRUE.addexistChild(command);
   }
-  String getRight(){
-    return conditionifelse.getRight();
+  void addfalseCommand(Node command){
+    ifFALSE.addexistChild(command);
   }
-  String getData(){
-    return conditionifelse.data;
-  }
-  
+
   String getname(){
     return name;
   }
@@ -96,21 +87,9 @@ class ConditionIfElse extends Command{
     x = x_;
     y = y_;
   }
-  
-  void setRight(Node command){
-    conditionifelse.setRight(command);
-  }
-  
-  void setLeft(Node command){
-    conditionifelse.setLeft(command); 
-  }
-  
-  Node getNodeLeft(){
-    return conditionifelse.leftChild;
-  }
-  
-  Node getNodeRight(){
-    return conditionifelse.rightChild;
+
+  Node getNode(){
+    return conditionifelse;
   }
   
   void display(){
@@ -130,15 +109,6 @@ class ConditionIfElse extends Command{
     
   }
   
-  void drag(){
-    if(mousePressed){
-      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
-        x = x + (mouseX - pmouseX);
-        y = y + (mouseY - pmouseY);
-      }
-    }
-  }
-  
   boolean contains(){
     if(mousePressed){
       if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
@@ -148,4 +118,12 @@ class ConditionIfElse extends Command{
     return false;
   }
   
+  void drag(){
+    if(mousePressed){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        x = x + (mouseX - pmouseX);
+        y = y + (mouseY - pmouseY);
+      }
+    }  
+  }
 }

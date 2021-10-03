@@ -6,20 +6,25 @@ class Motion extends Command{
   Node motion;
   
   Motion(String name_, String step_){
-    motion = new Node("motion");
+    motion = new Node(name_);
     step = step_ ;
-    motion.addLeft(step);
+    motion.addnewChild(step);
     name = name_ ;
   }
   
-  String getLeft(){
-    return motion.getLeft();
+  String getStep(){
+    return motion.getvalChild(0); //get child of motion (step)
   }
 
-  String getData(){
-    return motion.data;
+  String getVal(){
+    return motion.val; //string "motion"
   }
-   void display(){
+  
+  Node getNode(){
+    return motion; 
+  }
+  
+  void display(){
     fill(155,155,155);
     stroke(1);
     rect(x,y,w,h);
