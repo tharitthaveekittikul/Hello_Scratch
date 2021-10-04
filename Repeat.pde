@@ -49,6 +49,18 @@ class Repeat extends Command{
     return repeat;
   }
   
+  int getchildSize(){
+    return repeat.getchildSize();
+  }
+  
+  String getvalChild(int n){ // n = index in children
+    return repeat.getvalChild(n);
+  }
+  
+  Node getnodeChild(int n){ // n = index in children
+    return repeat.getnodeChild(n);
+  }
+  
   void display(){
     fill(155,155,155);
     stroke(1);

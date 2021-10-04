@@ -75,6 +75,18 @@ class ConditionIf extends Command{
     return h;
   }
   
+  int getchildSize(){
+    return conditionif.getchildSize();
+  }
+  
+  String getvalChild(int n){ // n = index in children
+    return conditionif.getvalChild(n);
+  }
+  
+  Node getnodeChild(int n){ // n = index in children
+    return conditionif.getnodeChild(n);
+  }
+  
   void setPosition(int x_, int y_){
     x = x_;
     y = y_;

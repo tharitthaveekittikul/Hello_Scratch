@@ -26,6 +26,8 @@ ArrayList<Command> allBlock;
 ArrayList<Command> Root;
 ArrayList<Command> groupBlock;
 
+Root start;
+
 void setup(){
   size(1600,900);
   cat = new Model();  
@@ -55,40 +57,9 @@ void setup(){
    
 }
 
-//void checkFunction(Command c){
-//  t.addchild(c.getNode());
-//  for (int i=0 ; i < t.getStartNode().size() ; i++){
-//    if( t.getStartNode().get(i).getData().equals("repeat") ){ //if function is Repeat
-//      for ( int j=0 ; j < Integer.parseInt(t.getStartNode().get(i).getLeft()) ; j++){
-//        if (t.getStartNode().get(i).getRight().equals("motion")){
-//          //println(motions.get(motions.size()-1).getLeft());
-//          cat.setStep(motions.get(motions.size()-1).getLeft());
-//          cat.display();
-//          println("step = " + j + " " + motions.get(motions.size()-1).getLeft() + " " + cat.x);
-//          cat.Move();
-          
-//          draw();
-//        }
-//      }
-//    }
-//    if ( t.getStartNode().get(i).getData().equals("conditionif") ){
-//      if (t.getStartNode().get(i).getLeft().equals("truth")){
-        
-//        if ( t.getStartNode().get(i).getNodeLeft().getLeft() == "true" ){
-          
-//         if (t.getStartNode().get(i).getRight().equals("motion")){
-            
-//            cat.setStep((motions.get(motions.size()-1).getLeft()));
-//            cat.Move();
-//          }
-//        }
-//      }
-//    }
-//  }
-//}
-
 void traverse(Command c){
   for (int i = 0 ; i < c.getchildSize() ; i++){
+    println("join");
     if ( c.getvalChild(i).equals("move") ){
       cat.setStep(c.getnodeChild(i).getvalChild(0));
       cat.Move();
@@ -139,34 +110,46 @@ void mouseClicked(){
   //startButton-----------------------------------------------------------------------------------------------------------------
   if(startButton.pressed()){
     println("start");
-    t = new Tree();
+    traverse(start);
+    //t = new Tree();
 
     //checkFunction(repeatList.get(repeatList.size()-1));
 
-    //MANUAL TEST
-    Node start = new Node("start");
-    Repeat r1 = new Repeat("repeat","3");
-    start.addexistChild(r1.getNode());
-    ConditionIf if1 = new ConditionIf("if","3",">","2");
-    Motion m1 = new Motion("move","10");
-    if1.addCommand(m1.getNode());
-    r1.addCommand(if1.getNode());
-    ConditionIf if2 = new ConditionIf("if","3",">","2");
-    start.addexistChild(if2.getNode());
-    ConditionIfElse ifelse = new ConditionIfElse("ifelse","3",">","2");
-    if2.addCommand(ifelse.getNode());
-    Motion m2 = new Motion("move","20");
-    ifelse.addtrueCommand(m2.getNode());
-    Motion m3 = new Motion("move","30");
-    ifelse.addfalseCommand(m3.getNode());
-    traverse(start);
-    println("FINISH");
+    ////MANUAL TEST
+    //Root start = new Root("run",str(Root.size()+1));
+    //Repeat r1 = new Repeat("repeat","3");
+    //println("Start:" + start);
+    //println("r1:" + r1);
+    //println("r1 node :" + r1.getNode());
+    //start.addCommand(r1.getNode());
+    //ConditionIf if1 = new ConditionIf("if","3",">","2");
+    //Motion m1 = new Motion("move","10");
+    //println("if1:" +if1);
+    //println("m1:" +m1);
+    //println("m1 node:" +m1.getNode());
+    //if1.addCommand(m1.getNode());
+    //println("r1:" + r1);
+    //r1.addCommand(if1.getNode());
+    //println("r1 node: " + r1.getNode());
+    //ConditionIf if2 = new ConditionIf("if","3",">","2");
+    //println(start);
+    //start.addCommand(if2.getNode());
+    //ConditionIfElse ifelse = new ConditionIfElse("ifelse","3",">","2");
+    //if2.addCommand(ifelse.getNode());
+    //Motion m2 = new Motion("move","20");
+    //ifelse.addtrueCommand(m2.getNode());
+    //Motion m3 = new Motion("move","30");
+    //ifelse.addfalseCommand(m3.getNode());
+    ////println(start.getchildSize());
+    //traverse(start);
+    //println("FINISH");
   }
   
   if(flagButton.pressed()){
       println("add flag");
-      allBlock.add(new Root( "Run", str(Root.size()+1)));
-      Root.add(new Root( "Run", str(Root.size()+1)));
+      start = new Root("run",str(Root.size()+1));
+      allBlock.add(start);      
+      //Root.add(new Root( "Run", str(Root.size()+1)));
   }
   
 }
@@ -216,7 +199,7 @@ void mouseDragged(){
   if(moveButton.pressed()){
     if(moveStepBox.getValue() != ""){
       println("use move");
-      allBlock.add(new Motion("Move",moveStepBox.getValue()));
+      allBlock.add(new Motion("move",moveStepBox.getValue()));
       moveStepBox.resetTextvalue();
 
       
@@ -325,7 +308,9 @@ void connectBlock(){
   int first_W;
   int second_W;
   int second_H;
-  int groupsize;
+  String name_i;
+  String name_j;
+  //int groupsize;
   for(int i = 0; i < allBlock.size(); i++){
     for(int j = 0; j < allBlock.size(); j++){          
       first_X = allBlock.get(i).getX();
@@ -335,40 +320,65 @@ void connectBlock(){
       first_W = allBlock.get(i).getW();
       second_W = allBlock.get(j).getW();
       second_H = allBlock.get(j).getH();
-      groupsize = allBlock.get(i).getX();
-      if(first_X != second_X || first_Y != second_Y){
-        //if(allBlock.get(i).getname() == "conditionIfElse")
-        //  groupsize += 1
-        // right
-        if(first_X > second_X && first_X < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
-          stroke(255,0,0);
-          strokeWeight(4);
-          line(second_X+(second_W/2), second_Y+second_H, second_X+second_W, second_Y+second_H);
-          strokeWeight(1);
-          if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
-              allBlock.get(i).setPosition(second_X+(second_W/2), second_Y+second_H);
+      //groupsize = allBlock.get(i).getX();
+      name_i = allBlock.get(i).getname();
+      name_j = allBlock.get(j).getname();
+      if(first_X != second_X || first_Y != second_Y){ // Not same block 
+        if(name_j == "repeat" || name_j == "conditionIf" || name_j == "conditionIfElse"){
+          // right
+          if(first_X > second_X && first_X < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
+            stroke(255,0,0);
+            strokeWeight(4);
+            line(second_X+(second_W/2), second_Y+second_H, second_X+second_W, second_Y+second_H);
+            strokeWeight(1);
+            if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
+                allBlock.get(i).setPosition(second_X+(second_W/2), second_Y+second_H);
+                allBlock.get(j).addCommand(allBlock.get(i).getNode());
+            }
           }
         }
-        // left
-        else if((first_X+first_W) > second_X && (first_X+first_W) < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
-          stroke(255,0,0);
-          strokeWeight(4);
-          line(second_X, second_Y+second_H, second_X+(second_W/2), second_Y+second_H);
-          strokeWeight(1);
-          if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
-              allBlock.get(i).setPosition(second_X-(allBlock.get(j).getW()/2), second_Y+(allBlock.get(j).getH()));
+        if(name_j == "move"){
+            // left
+          if((first_X+first_W) > second_X && (first_X+first_W) < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
+            stroke(255,0,0);
+            strokeWeight(4);
+            line(second_X, second_Y+second_H, second_X+(second_W/2), second_Y+second_H);
+            strokeWeight(1);
+            if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
+                allBlock.get(i).setPosition(second_X-(allBlock.get(j).getW()/2), second_Y+(allBlock.get(j).getH()));
+            }
           }
-        }
-        // middle
-        else if(first_X+(first_W/2) > second_X && first_X+(first_W/2) < (second_X+second_W) && first_Y > second_Y && first_Y < (second_Y+second_H)){
-          stroke(255,0,0);
-          strokeWeight(4);
-          line(second_X, second_Y+second_H, second_X+second_W, second_Y+second_H);
-          strokeWeight(1);
-          if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
-              allBlock.get(i).setPosition(second_X, second_Y+(allBlock.get(j).getH()));
+            //middle
+          if(first_X+(first_W/2) > second_X && first_X+(first_W/2) < (second_X+second_W) && first_Y > second_Y && first_Y < (second_Y+second_H)){
+            stroke(255,0,0);
+            strokeWeight(4);
+            line(second_X, second_Y+second_H, second_X+second_W, second_Y+second_H);
+            strokeWeight(1);
+            if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
+                allBlock.get(i).setPosition(second_X, second_Y+(allBlock.get(j).getH()));
+            }
           }
-        }
+        } 
+        
+        if(name_j == "run"){
+            if(first_X+(first_W/2) > second_X && first_X+(first_W/2) < (second_X+second_W) && first_Y > second_Y && first_Y < (second_Y+second_H)){
+            //middle
+            stroke(255,0,0);
+            strokeWeight(4);
+            line(second_X, second_Y+second_H, second_X+second_W, second_Y+second_H);
+            strokeWeight(1);
+            if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
+                allBlock.get(i).setPosition(second_X, second_Y+(allBlock.get(j).getH()));
+                //println(allBlock.get(j));
+                //println(allBlock.get(j).getNode());
+                //println(allBlock.get(j).getname());
+                //println(allBlock.get(i));
+                //println(allBlock.get(i).getNode());
+                //println(allBlock.get(i).getname());
+                allBlock.get(j).addCommand(allBlock.get(i).getNode());    
+            }
+          }
+        }        
       }
     }
   }

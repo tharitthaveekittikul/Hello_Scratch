@@ -15,6 +15,10 @@ class Command{
     children.add(node); 
   }
   
+  void addCommand(Node n){
+    root.addexistChild(n);
+  }
+  
   String getvalChild(int n){ // n = index in children
     return children.get(n).val;
   }
@@ -46,7 +50,6 @@ class Command{
 
   Node getnodeChild(int n){ // n = index in children
     return children.get(n);
-
   }
   
   int getchildSize(){
@@ -87,15 +90,3 @@ class Command{
     return false;
   } 
 }
-  
-
-
-
-
-
-
-
-
-
-
- 

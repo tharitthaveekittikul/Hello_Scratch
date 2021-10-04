@@ -92,6 +92,18 @@ class ConditionIfElse extends Command{
     return conditionifelse;
   }
   
+  int getchildSize(){
+    return conditionifelse.getchildSize();
+  }
+  
+  String getvalChild(int n){ // n = index in children
+    return conditionifelse.getvalChild(n);
+  }
+  
+  Node getnodeChild(int n){ // n = index in children
+    return conditionifelse.getnodeChild(n);
+  }
+  
   void display(){
     offset = h*groupsize;
     fill(155,155,155);

@@ -3,12 +3,28 @@ class Root extends Command{
   int x = mouseX-(w/2), y = mouseY-(h/2);
   String order;
   String name;
-  Node Root;
+  Node root;
   
   Root(String name_, String order_){
-    Root = new Node("Root");
     order = order_;    
     name = name_ ;
+    root = new Node(name);
+  }
+  
+  void addCommand(Node command){
+    root.addexistChild(command);
+  }
+  
+  int getchildSize(){
+    return root.getchildSize();
+  }
+  
+  String getvalChild(int n){ // n = index in children
+    return root.getvalChild(n);
+  }
+  
+  Node getnodeChild(int n){ // n = index in children
+    return root.getnodeChild(n);
   }
   
   void display(){
@@ -38,6 +54,10 @@ class Root extends Command{
   
   int getH(){
     return h;
+  }
+  
+  Node getNode(){
+    return root;
   }
   
   void setPosition(int x_, int y_){

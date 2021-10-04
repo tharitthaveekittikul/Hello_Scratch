@@ -53,6 +53,18 @@ class Motion extends Command{
     return h;
   }
   
+  int getchildSize(){
+    return motion.getchildSize();
+  }
+  
+  String getvalChild(int n){ // n = index in children
+    return motion.getvalChild(n);
+  }
+  
+  Node getnodeChild(int n){ // n = index in children
+    return motion.getnodeChild(n);
+  }
+  
   void setPosition(int x_, int y_){
     x = x_;
     y = y_;
