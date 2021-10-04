@@ -28,6 +28,8 @@ ArrayList<Command> groupBlock;
 
 Root start;
 
+Node temp;
+
 void setup(){
   size(1600,900);
   cat = new Model();  
@@ -59,7 +61,6 @@ void setup(){
 
 void traverse(Command c){
   for (int i = 0 ; i < c.getchildSize() ; i++){
-    println("join");
     if ( c.getvalChild(i).equals("move") ){
       cat.setStep(c.getnodeChild(i).getvalChild(0));
       cat.Move();
@@ -88,61 +89,120 @@ void traverse(Command c){
   }
 }
 
-void mouseClicked(){
-  //if(true){ //pressed repeat button and parameter 3
+void getparent(Command c,Command cm){
+  for (int i = 0 ; i < c.getchildSize() ; i++){
+    if ( c.getvalChild(i).equals("move") ){
+      println("Move by " + c.getnodeChild(i).getvalChild(0));
+      if ( c.getnodeChild(i) == cm.getNode() ) {
+        if ( c.getVal().equals("ifTRUE") || c.getVal().equals("ifFALSE")){
+            println("Fond Laew Ja : " + temp.getVal());
+            break;
+        }
+        println("Found Laew Ja : " + c.getVal());
+        break;
+      }
+    }
+    if ( c.getvalChild(i).equals("repeat") ){
+      int number = Integer.parseInt(c.getnodeChild(i).getvalChild(0)); //n of repeat
+      println("Repeat by " + number );
+      if ( c.getnodeChild(i) == cm.getNode() ) {
+        if ( c.getVal().equals("ifTRUE") || c.getVal().equals("ifFALSE")){
+            println("Fond Laew Ja : " + temp.getVal());
+            break;
+        }
+        println("Fond Laew Ja : " + c.getVal());
+        break;
+      }
+      getparent(c.getnodeChild(i),cm);
+    }
+    if ( c.getvalChild(i).equals("if") ){
+      if ( c.getnodeChild(i).getvalChild(0).equals("TRUE")){
+        println("If Condition = TRUE ");
+        if ( c.getnodeChild(i) == cm.getNode() ) {
+          if ( c.getVal().equals("ifTRUE") || c.getVal().equals("ifFALSE")){
+            println("Fond Laew Ja : " + temp.getVal());
+            break;
+          }
+          println("Fond Laew Ja : " + c.getVal());
+          break;
+        }
+        getparent(c.getnodeChild(i),cm); 
+      }
+    }
+    if ( c.getvalChild(i).equals("ifelse") ){
+      temp = c.getnodeChild(i);
+      println("IfElse Condition ");
+        if ( c.getnodeChild(i) == cm.getNode() ) {
+          if ( c.getVal().equals("ifTRUE") || c.getVal().equals("ifFALSE")){ 
+            println("Fond Laew Ja : " + temp.getVal());
+            break;
+          }
+          println("Fond Laew Ja : " + c.getVal());
+          break;
+        }
+        getparent(c.getnodeChild(i).getnodeChild(1),cm); 
+        getparent(c.getnodeChild(i).getnodeChild(2),cm);
+      }
+    }
+}
 
-    //r = new Repeat("3");
-    //motions.add(new Motion("10"));
-    //println("repeatmain = " + r.getLeft());
-    //r.setRight(motions.get(motions.size()-1).motion);
-    ////do work
-    ////println("stepmain = " + m.getLeft());
-    //checkFunction(r);
-    
-    //motion in if
-    //con = new ConditionIf("3","==","3");
-    //motions.add(new Motion("Move","40"));
-    //con.setRight(motions.get(motions.size()-1).motion);
-    //println(con.getNodeLeft());
-    //checkFunction(con);
-  //}
+void mouseClicked(){
   
   //startButton-----------------------------------------------------------------------------------------------------------------
   if(startButton.pressed()){
-    println("start");
-    traverse(start);
+    //println("start");
+    //traverse(start);
     //t = new Tree();
+
+    //MANUAL1
+    //Root start = new Root("run",str(Root.size()+1));
+    //ConditionIfElse ie = new ConditionIfElse("ifelse","3",">","2");
+    //Repeat r1 = new Repeat("repeat","3");
+    //ie.addtrueCommand(r1.getNode());
+    //Motion m1 = new Motion("move","10");
+    //r1.addCommand(m1.getNode());
+    //Motion m2 = new Motion("move","20");
+    //ie.addfalseCommand(m2.getNode());
+    //Motion m3 = new Motion("move","50");
+    //r1.addCommand(m3.getNode());
+    //start.addCommand(ie.getNode());
+    //r1.removeCommand(m3.getNode());
+    //traverse(start);
+    //traversaltree(start,m1);
 
     //checkFunction(repeatList.get(repeatList.size()-1));
 
-    ////MANUAL TEST
-    //Root start = new Root("run",str(Root.size()+1));
-    //Repeat r1 = new Repeat("repeat","3");
-    //println("Start:" + start);
-    //println("r1:" + r1);
-    //println("r1 node :" + r1.getNode());
-    //start.addCommand(r1.getNode());
-    //ConditionIf if1 = new ConditionIf("if","3",">","2");
-    //Motion m1 = new Motion("move","10");
-    //println("if1:" +if1);
-    //println("m1:" +m1);
-    //println("m1 node:" +m1.getNode());
-    //if1.addCommand(m1.getNode());
-    //println("r1:" + r1);
-    //r1.addCommand(if1.getNode());
-    //println("r1 node: " + r1.getNode());
-    //ConditionIf if2 = new ConditionIf("if","3",">","2");
-    //println(start);
-    //start.addCommand(if2.getNode());
-    //ConditionIfElse ifelse = new ConditionIfElse("ifelse","3",">","2");
-    //if2.addCommand(ifelse.getNode());
-    //Motion m2 = new Motion("move","20");
-    //ifelse.addtrueCommand(m2.getNode());
-    //Motion m3 = new Motion("move","30");
-    //ifelse.addfalseCommand(m3.getNode());
-    ////println(start.getchildSize());
-    //traverse(start);
-    //println("FINISH");
+    //MANUAL TEST
+    Root start = new Root("run",str(Root.size()+1));
+    Repeat r1 = new Repeat("repeat","3");
+    println("Start:" + start);
+    println("r1:" + r1);
+    println("r1 node :" + r1.getNode());
+    start.addCommand(r1.getNode());
+    ConditionIf if1 = new ConditionIf("if","3",">","2");
+    Motion m1 = new Motion("move","10");
+    println("if1:" +if1);
+    println("m1:" +m1);
+    println("m1 node:" +m1.getNode());
+    if1.addCommand(m1.getNode());
+    println("r1:" + r1);
+    r1.addCommand(if1.getNode());
+    println("r1 node: " + r1.getNode());
+    ConditionIf if2 = new ConditionIf("if","3",">","2");
+    println(start);
+    start.addCommand(if2.getNode());
+    ConditionIfElse ifelse = new ConditionIfElse("ifelse","3","<","2");
+    if2.addCommand(ifelse.getNode());
+    Motion m2 = new Motion("move","20");
+    ifelse.addtrueCommand(m2.getNode());
+    Motion m3 = new Motion("move","30");
+    ifelse.addfalseCommand(m3.getNode());
+    //println(start.getchildSize());
+    traverse(start);
+    println("========traversaltree========");
+    getparent(start,m3);
+    println("FINISH");
+    
   }
   
   if(flagButton.pressed()){

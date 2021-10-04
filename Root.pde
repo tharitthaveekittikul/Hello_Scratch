@@ -15,6 +15,10 @@ class Root extends Command{
     root.addexistChild(command);
   }
   
+  void removeCommand(Node command){
+    root.removechild(command); 
+  }
+  
   int getchildSize(){
     return root.getchildSize();
   }

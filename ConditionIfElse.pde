@@ -57,6 +57,14 @@ class ConditionIfElse extends Command{
   void addfalseCommand(Node command){
     ifFALSE.addexistChild(command);
   }
+  
+  void removetrueCommand(Node command){
+    ifTRUE.removechild(command); 
+  }
+  
+  void removefalseCommand(Node command){
+    ifFALSE.removechild(command); 
+  }
 
   String getname(){
     return name;

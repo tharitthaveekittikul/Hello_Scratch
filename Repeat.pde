@@ -20,6 +20,10 @@ class Repeat extends Command{
     repeat.addexistChild(command);
   }
   
+  void removeCommand(Node command){
+    repeat.removechild(command); 
+  }
+  
   String getname(){
     return name;
   }

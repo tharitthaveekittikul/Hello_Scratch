@@ -19,13 +19,20 @@ class Command{
     root.addexistChild(n);
   }
   
+  void removechild(Node node){
+    children.remove(node);
+  }
+  
   String getvalChild(int n){ // n = index in children
     return children.get(n).val;
   }
-  
 
   String getname(){
     return name;
+  }
+  
+  String getVal(){
+    return val; 
   }
   
   int getX(){

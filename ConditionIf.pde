@@ -46,6 +46,10 @@ class ConditionIf extends Command{
     conditionif.addexistChild(command);
   }
   
+  void removeCommand(Node command){
+    conditionif.removechild(command); 
+  }
+  
   void display(){
     fill(155,155,155);
     stroke(1);
