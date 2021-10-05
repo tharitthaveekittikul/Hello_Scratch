@@ -51,6 +51,10 @@ class ConditionIfElse extends Command{
     
   }
   
+  void addCommand(Node command){
+    conditionifelse.addexistChild(command);
+  }
+  
   void addtrueCommand(Node command){
     ifTRUE.addexistChild(command);
   }

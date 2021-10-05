@@ -219,7 +219,7 @@ void mouseDragged(){
   if (conditionButton.pressed()){
     if(firstValBox.getValue() != "" && checkOperator() && secondValBox.getValue() != ""){
       println("use if");
-      allBlock.add(new ConditionIf("conditionIf", firstValBox.getValue(), opIfBox.getValue(), secondValBox.getValue()));
+      allBlock.add(new ConditionIf("if", firstValBox.getValue(), opIfBox.getValue(), secondValBox.getValue()));
       firstValBox.resetTextvalue();
       opIfBox.resetTextvalue();
       secondValBox.resetTextvalue();
@@ -233,7 +233,7 @@ void mouseDragged(){
   if (conditionElseButton.pressed()){
     if(firstVal2Box.getValue() != "" && checkOperator() && secondVal2Box.getValue() != ""){
       println("use if else");
-      allBlock.add(new ConditionIfElse("conditionIfElse", firstVal2Box.getValue(), opIfElseBox.getValue(), secondVal2Box.getValue()));
+      allBlock.add(new ConditionIfElse("ifelse", firstVal2Box.getValue(), opIfElseBox.getValue(), secondVal2Box.getValue()));
       firstVal2Box.resetTextvalue();
       opIfElseBox.resetTextvalue();
       secondVal2Box.resetTextvalue();
@@ -384,7 +384,7 @@ void connectBlock(){
       name_i = allBlock.get(i).getname();
       name_j = allBlock.get(j).getname();
       if(first_X != second_X || first_Y != second_Y){ // Not same block 
-        if(name_j == "repeat" || name_j == "conditionIf" || name_j == "conditionIfElse"){
+        if(name_j == "repeat" || name_j == "if" || name_j == "ifelse"){
           // right
           if(first_X > second_X && first_X < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
             stroke(255,0,0);
