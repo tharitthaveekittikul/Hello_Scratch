@@ -6,10 +6,12 @@ Button conditionButton;
 Button conditionElseButton;
 Button repeatButton;
 Button moveButton;
+Button rotateButton;
 Button startButton;
 Button flagButton;
 
 TextBox moveStepBox;
+TextBox angleBox;
 TextBox repeatBox;
 //for conditionButton
 TextBox firstValBox;
@@ -40,6 +42,7 @@ void setup(){
   conditionElseButton = new Button("if else:",50,100,230,40);
   repeatButton = new Button("repeat:",50,150,180,40);
   moveButton = new Button("Move:",50,200,150,40);
+  rotateButton = new Button("Rotate:",50,250,150,40);
   flagButton = new Button("Run",50,5,150,40);
   
   //Textbox---------------------------------------------
@@ -50,7 +53,8 @@ void setup(){
   opIfElseBox = new TextBox(188,105,30,30,3);
   secondVal2Box = new TextBox(225,105,50,30,6);
   repeatBox = new TextBox(140,155,50,30,3);//repeat 
-  moveStepBox = new TextBox(130,205,40,30,3);//move
+  moveStepBox = new TextBox(130,205,40,30,5);//move
+  angleBox = new TextBox(130,255,40,30,5); //rotate
   
   //Block-----------------------------------------------
   allBlock = new ArrayList<Command>();
@@ -64,6 +68,10 @@ void traverse(Command c){
     if ( c.getvalChild(i).equals("move") ){
       cat.setStep(c.getnodeChild(i).getvalChild(0));
       cat.Move();
+    }
+    if ( c.getvalChild(i).equals("rotate") ){
+      //cat.setAngle(c.getnodeChild(i).getvalChild(0));
+      cat.Rotate(Float.parseFloat(c.getnodeChild(i).getvalChild(0)));
     }
     if ( c.getvalChild(i).equals("repeat") ){
       int number = Integer.parseInt(c.getnodeChild(i).getvalChild(0)); //n of repeat
@@ -150,8 +158,8 @@ void mouseClicked(){
   
   //startButton-----------------------------------------------------------------------------------------------------------------
   if(startButton.pressed()){
-    //println("start");
-    //traverse(start);
+    println("start");
+    traverse(start);
     //t = new Tree();
 
     //MANUAL1
@@ -170,48 +178,45 @@ void mouseClicked(){
     //traverse(start);
     //traversaltree(start,m1);
 
-    //checkFunction(repeatList.get(repeatList.size()-1));
-
-    //MANUAL TEST
-    Root start = new Root("run",str(Root.size()+1));
-    Repeat r1 = new Repeat("repeat","3");
-    println("Start:" + start);
-    println("r1:" + r1);
-    println("r1 node :" + r1.getNode());
-    start.addCommand(r1.getNode());
-    ConditionIf if1 = new ConditionIf("if","3",">","2");
-    Motion m1 = new Motion("move","10");
-    println("if1:" +if1);
-    println("m1:" +m1);
-    println("m1 node:" +m1.getNode());
-    if1.addCommand(m1.getNode());
-    println("r1:" + r1);
-    r1.addCommand(if1.getNode());
-    println("r1 node: " + r1.getNode());
-    ConditionIf if2 = new ConditionIf("if","3",">","2");
-    println(start);
-    start.addCommand(if2.getNode());
-    ConditionIfElse ifelse = new ConditionIfElse("ifelse","3","<","2");
-    if2.addCommand(ifelse.getNode());
-    Motion m2 = new Motion("move","20");
-    ifelse.addtrueCommand(m2.getNode());
-    Motion m3 = new Motion("move","30");
-    ifelse.addfalseCommand(m3.getNode());
-    //println(start.getchildSize());
-    traverse(start);
-    println("========traversaltree========");
-    getparent(start,m3);
-    println("FINISH");
+    //////MANUAL TEST
+    //Root start = new Root("run",str(Root.size()+1));
+    //Repeat r1 = new Repeat("repeat","3");
+    //println("Start:" + start);
+    //println("r1:" + r1);
+    //println("r1 node :" + r1.getNode());
+    //start.addCommand(r1.getNode());
+    //ConditionIf if1 = new ConditionIf("if","3",">","2");
+    //Motion m1 = new Motion("move","10");
+    //println("if1:" +if1);
+    //println("m1:" +m1);
+    //println("m1 node:" +m1.getNode());
+    //if1.addCommand(m1.getNode());
+    //println("r1:" + r1);
+    //r1.addCommand(if1.getNode());
+    //println("r1 node: " + r1.getNode());
+    //ConditionIf if2 = new ConditionIf("if","3",">","2");
+    //println(start);
+    //start.addCommand(if2.getNode());
+    //ConditionIfElse ifelse = new ConditionIfElse("ifelse","3","<","2");
+    //if2.addCommand(ifelse.getNode());
+    //Motion m2 = new Motion("move","20");
+    //ifelse.addtrueCommand(m2.getNode());
+    //Motion m3 = new Motion("move","30");
+    //ifelse.addfalseCommand(m3.getNode());
+    ////println(start.getchildSize());
+    //traverse(start);
+    //println("========traversaltree========");
+    //getparent(start,m3);
+    //println("FINISH");
     
   }
   
   if(flagButton.pressed()){
       println("add flag");
       start = new Root("run",str(Root.size()+1));
-      allBlock.add(start);      
+      allBlock.add(start);
       //Root.add(new Root( "Run", str(Root.size()+1)));
   }
-  
 }
 
 void mouseDragged(){
@@ -271,6 +276,17 @@ void mouseDragged(){
       println("please insert value");
     }
   }
+  if(rotateButton.pressed()){
+    if(angleBox.getValue() != ""){
+      println("use rotate");
+      allBlock.add(new Motion("rotate",angleBox.getValue()));
+      angleBox.resetTextvalue();
+    }
+    else{
+      println("please insert value");
+    }
+    
+  }
   
 }
 
@@ -290,6 +306,7 @@ void draw(){
   repeatButton.display();
   //moves
   moveButton.display();
+  rotateButton.display();
   
   //TextBox--------------------
   firstValBox.draw();
@@ -299,6 +316,7 @@ void draw(){
   opIfElseBox.draw();
   secondVal2Box.draw();
   moveStepBox.draw();
+  angleBox.draw();
   repeatBox.draw();
   sortBlockorder();
   runCat();   
@@ -320,7 +338,7 @@ void draw(){
         allBlock.get(i).display();
       }else{
         allBlock.get(i).setGroupSize(0);
-        println("no group");
+        //println("no group");
         allBlock.get(i).drag();
         allBlock.get(i).display();
       }
@@ -335,6 +353,7 @@ void draw(){
 void runCat(){
   cat.display();
   cat.checkEdges();
+  //cat.Rotate(1);
 }
 
 void showCoordinates(){
@@ -504,10 +523,10 @@ ArrayList<Command> dragTogether(Command Block_i ,ArrayList<Command> GroupBlock_)
     if((lower_X == upper_X && lower_Y == upper_Y+upper_H)){
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
-    }else if((lower_X == upper_X+(upper_W/2) && lower_Y == upper_Y+upper_H)){
+    }else if((lower_X == upper_X+(upper_W/2) && lower_Y == upper_Y+upper_H)){ //right
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
-    }else if((lower_X == upper_X-(upper_W/2) && lower_Y == upper_Y+upper_H)){
+    }else if((lower_X == upper_X-(upper_W/2) && lower_Y == upper_Y+upper_H)){ //left
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
     }

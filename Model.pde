@@ -2,17 +2,22 @@ class Model{
   int x , y, w = 100, h = 100;
   String step;
   PImage img;
+  //String angle;
+  float angle;
   
   Model(){
    img = loadImage("cat.png") ;
-   x = 1125 ;
+   x = 1150 ;
    y = 300;
    step = "0";
   }
   
   void display(){
-    fill(175);
-    image(img,x,y,w,h);
+    pushMatrix();
+    translate(x,y);
+    rotate(radians(angle));
+    image(img,-25,-25,w,h);
+    popMatrix();
     fill(0);
     textSize(16);
     text("Cat position x = " + x + " ,  y = " + y, 1130 ,430);
@@ -34,9 +39,14 @@ class Model{
     delay(100);
   } 
   
+  void Rotate(float angle_){
+    angle = angle + angle_;
+    println("rotate: " + angle);
+  }
+  
   void checkEdges(){
     if(x >= width){
-      x = 1125;
+      x = 1150;
     }
   }
   

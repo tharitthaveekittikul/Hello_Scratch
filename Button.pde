@@ -23,25 +23,25 @@ class Button{
   boolean pressed(){
     if(name == "if :"){
       if(mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
     if(name == "if else:"){
       if(mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
     if(name == "repeat:"){
       if(mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
     if (name == "Move:"){
       if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
@@ -57,8 +57,12 @@ class Button{
         return true;
       }
     }
+    if (name == "Rotate:"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
     return false;
   }  
 }
-  
-  
