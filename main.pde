@@ -23,6 +23,7 @@ TextBox opIfElseBox;
 TextBox secondVal2Box;
 
 Model cat;
+Bin bin;
 Tree t;
 ArrayList<Command> allBlock;
 ArrayList<Command> Root;
@@ -34,7 +35,8 @@ Node temp;
 
 void setup(){
   size(1600,900);
-  cat = new Model();  
+  cat = new Model(); 
+  bin = new Bin();
   
   //Button----------------------------------------------
   startButton = new Button("start",900,20,150,40);
@@ -320,6 +322,7 @@ void draw(){
   repeatBox.draw();
   sortBlockorder();
   runCat();   
+  bin.display();
   
   //Block-----------------------------------------
   for(int i = 0; i < allBlock.size(); i++){
@@ -345,6 +348,7 @@ void draw(){
    }
   
   connectBlock();
+  useBin();
   showCoordinates();
   
 }
@@ -532,4 +536,28 @@ ArrayList<Command> dragTogether(Command Block_i ,ArrayList<Command> GroupBlock_)
     }
   }
   return groupBlock;
+}
+void useBin(){
+  int first_x;
+  int first_y;
+  int first_w;
+  int first_h;
+  int bin_x = bin.getX();
+  int bin_y = bin.getY();
+  int bin_w = bin.getW();
+  int bin_h = bin.getH();
+  for(int i = 0 ; i < allBlock.size(); i++){
+    first_x = allBlock.get(i).getX();
+    first_y = allBlock.get(i).getY();
+    first_w = allBlock.get(i).getW();
+    first_h = allBlock.get(i).getH();
+    if(first_x + (first_w)/2 > bin_x && first_x + (first_w)/2< (bin_x+bin_w) && first_y + (first_h)/2 > bin_y && first_y + (first_h)/2 < (bin_y+bin_h)){
+      fill(255,0,0,120);  
+      rect(bin_x,bin_y,bin_w,bin_h);
+      if(allBlock.get(i).contains() == false){
+        allBlock.remove(i);
+      }
+    }
+    
+  }
 }
