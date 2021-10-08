@@ -91,6 +91,11 @@ class ConditionIf extends Command{
     return conditionif.getnodeChild(n);
   }
   
+  void setGroupSize(int groupsize_){
+    groupsize = 1 + groupsize_ ;
+
+  }
+  
   void setPosition(int x_, int y_){
     x = x_;
     y = y_;

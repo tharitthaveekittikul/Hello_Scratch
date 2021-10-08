@@ -1,5 +1,5 @@
 class Motion extends Command{
-  int w = 150, h = 30;
+  int w = 200, h = 30;
   int x = mouseX-(w/2), y = mouseY-(h/2);
   String step ;
   String name;
@@ -59,6 +59,11 @@ class Motion extends Command{
   
   String getvalChild(int n){ // n = index in children
     return motion.getvalChild(n);
+  }
+  
+  void setGroupSize(int groupsize_){
+    groupsize = 1 + groupsize_ ;
+
   }
   
   Node getnodeChild(int n){ // n = index in children

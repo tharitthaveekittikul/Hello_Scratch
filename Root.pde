@@ -1,5 +1,5 @@
 class Root extends Command{
-  int w = 150, h = 30;
+  int w = 200, h = 30;
   int x = mouseX-(w/2), y = mouseY-(h/2);
   String order;
   String name;

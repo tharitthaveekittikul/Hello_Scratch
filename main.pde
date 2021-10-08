@@ -149,7 +149,7 @@ void getparent(Command c,Command cm){
 void mouseClicked(){
   
   //startButton-----------------------------------------------------------------------------------------------------------------
-  if(startButton.pressed()){
+  //if(startButton.pressed()){
     //println("start");
     //traverse(start);
     //t = new Tree();
@@ -173,37 +173,37 @@ void mouseClicked(){
     //checkFunction(repeatList.get(repeatList.size()-1));
 
     //MANUAL TEST
-    Root start = new Root("run",str(Root.size()+1));
-    Repeat r1 = new Repeat("repeat","3");
-    println("Start:" + start);
-    println("r1:" + r1);
-    println("r1 node :" + r1.getNode());
-    start.addCommand(r1.getNode());
-    ConditionIf if1 = new ConditionIf("if","3",">","2");
-    Motion m1 = new Motion("move","10");
-    println("if1:" +if1);
-    println("m1:" +m1);
-    println("m1 node:" +m1.getNode());
-    if1.addCommand(m1.getNode());
-    println("r1:" + r1);
-    r1.addCommand(if1.getNode());
-    println("r1 node: " + r1.getNode());
-    ConditionIf if2 = new ConditionIf("if","3",">","2");
-    println(start);
-    start.addCommand(if2.getNode());
-    ConditionIfElse ifelse = new ConditionIfElse("ifelse","3","<","2");
-    if2.addCommand(ifelse.getNode());
-    Motion m2 = new Motion("move","20");
-    ifelse.addtrueCommand(m2.getNode());
-    Motion m3 = new Motion("move","30");
-    ifelse.addfalseCommand(m3.getNode());
-    //println(start.getchildSize());
-    traverse(start);
-    println("========traversaltree========");
-    getparent(start,m3);
-    println("FINISH");
+  //  Root start = new Root("run",str(Root.size()+1));
+  //  Repeat r1 = new Repeat("repeat","3");
+  //  println("Start:" + start);
+  //  println("r1:" + r1);
+  //  println("r1 node :" + r1.getNode());
+  //  start.addCommand(r1.getNode());
+  //  ConditionIf if1 = new ConditionIf("if","3",">","2");
+  //  Motion m1 = new Motion("move","10");
+  //  println("if1:" +if1);
+  //  println("m1:" +m1);
+  //  println("m1 node:" +m1.getNode());
+  //  if1.addCommand(m1.getNode());
+  //  println("r1:" + r1);
+  //  r1.addCommand(if1.getNode());
+  //  println("r1 node: " + r1.getNode());
+  //  ConditionIf if2 = new ConditionIf("if","3",">","2");
+  //  println(start);
+  //  start.addCommand(if2.getNode());
+  //  ConditionIfElse ifelse = new ConditionIfElse("ifelse","3","<","2");
+  //  if2.addCommand(ifelse.getNode());
+  //  Motion m2 = new Motion("move","20");
+  //  ifelse.addtrueCommand(m2.getNode());
+  //  Motion m3 = new Motion("move","30");
+  //  ifelse.addfalseCommand(m3.getNode());
+  //  //println(start.getchildSize());
+  //  traverse(start);
+  //  println("========traversaltree========");
+  //  getparent(start,m3);
+  //  println("FINISH");
     
-  }
+  //}
   
   if(flagButton.pressed()){
       println("add flag");
@@ -316,16 +316,16 @@ void draw(){
             groupBlock.get(j).display();
           }
         }
-        //println(allBlock.get(i).getname()+" group :"+groupBlock);
+        println(allBlock.get(i).getname()+" group :"+groupBlock);
         allBlock.get(i).display();
       }else{
         allBlock.get(i).setGroupSize(0);
-        println("no group");
+        connectBlock();
+        //println("no group");
         allBlock.get(i).drag();
         allBlock.get(i).display();
       }
    }
-  
   connectBlock();
   showCoordinates();
   
@@ -347,13 +347,11 @@ boolean checkOperator(){
   if(opIfBox.getValue().equals("=") || opIfBox.getValue().equals(">") || 
   opIfBox.getValue().equals("<") || opIfBox.getValue().equals(">=") || 
   opIfBox.getValue().equals("<=") || opIfBox.getValue().equals("!=") ){
-    //println("checkif");
     return true;
   }
   if(opIfElseBox.getValue().equals("=") || opIfElseBox.getValue().equals(">") || 
   opIfElseBox.getValue().equals("<") || opIfElseBox.getValue().equals(">=") || 
   opIfElseBox.getValue().equals("<=") || opIfElseBox.getValue().equals("!=") ){
-    //println("checkifelse");
     return true;
   }
   return false;
@@ -370,7 +368,8 @@ void connectBlock(){
   int second_H;
   String name_i;
   String name_j;
-  //int groupsize;
+  int groupsize_j;
+
   for(int i = 0; i < allBlock.size(); i++){
     for(int j = 0; j < allBlock.size(); j++){          
       first_X = allBlock.get(i).getX();
@@ -380,65 +379,93 @@ void connectBlock(){
       first_W = allBlock.get(i).getW();
       second_W = allBlock.get(j).getW();
       second_H = allBlock.get(j).getH();
-      //groupsize = allBlock.get(i).getX();
+      groupsize_j = allBlock.get(j).getSize();
       name_i = allBlock.get(i).getname();
-      name_j = allBlock.get(j).getname();
+      name_j = allBlock.get(j).getname();      
       if(first_X != second_X || first_Y != second_Y){ // Not same block 
-        if(name_j == "repeat" || name_j == "if" || name_j == "ifelse"){
-          // right
-          if(first_X > second_X && first_X < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
-            stroke(255,0,0);
+        if(name_j == "ifelse"){
+          if(first_X + first_W/2 > second_X + second_W/4 && first_X + first_W/2 <= second_X + second_W/2 && first_Y+5 > second_Y && first_Y+5 < second_Y +(second_H*groupsize_j)){
+            fill(255,0,0,120);  
+            rect(second_X + second_W/4, second_Y, second_W/4, second_H*groupsize_j);
+            noTint();
+            stroke(0,255,0);
             strokeWeight(4);
-            line(second_X+(second_W/2), second_Y+second_H, second_X+second_W, second_Y+second_H);
+            line(second_X+second_W/4, second_Y+(second_H*groupsize_j), second_X+second_W+second_W/4, second_Y+(second_H*groupsize_j));
             strokeWeight(1);
             if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
-                allBlock.get(i).setPosition(second_X+(second_W/2), second_Y+second_H);
-                allBlock.get(j).addCommand(allBlock.get(i).getNode());
+              allBlock.get(i).setPosition(second_X+second_W/4, second_Y+second_H*groupsize_j);
+            }
+          }
+          else if(first_X + first_W/2 > second_X + second_W/4 && first_X + first_W/2 <= second_X + second_W/2 && first_Y+5 > second_Y + (second_H*groupsize_j) && first_Y+5 < second_Y + second_H + (second_H*groupsize_j)){
+            fill(255,0,0,120);  
+            rect(second_X + second_W/4, second_Y+(second_H*groupsize_j), second_W/4, second_H*groupsize_j);
+            noTint();
+            stroke(0,255,0);
+            strokeWeight(4);
+            line(second_X+second_W/4, second_Y+second_H+(second_H*groupsize_j), second_X+second_W+second_W/4, second_Y+second_H+(second_H*groupsize_j));
+            strokeWeight(1);
+            if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
+              allBlock.get(i).setPosition(second_X+second_W/4, second_Y+second_H+(second_H*groupsize_j));
             }
           }
         }
-        if(name_j == "move"){
-            // left
-          if((first_X+first_W) > second_X && (first_X+first_W) < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
-            stroke(255,0,0);
+        else if(name_j == "if"){
+          if(first_X + first_W/2 > second_X + second_W/4 && first_X + first_W/2 <= second_X + second_W/2 && first_Y+5 > second_Y && first_Y+5 < second_Y + (second_H*groupsize_j)){
+            fill(255,0,0,120);  
+            rect(second_X + second_W/4, second_Y, second_W/4, second_H*groupsize_j);
+            noTint();
+            stroke(0,255,0);
             strokeWeight(4);
-            line(second_X, second_Y+second_H, second_X+(second_W/2), second_Y+second_H);
+            line(second_X+second_W/4, second_Y+(second_H*groupsize_j), second_X+second_W+second_W/4, second_Y+(second_H*groupsize_j));
             strokeWeight(1);
             if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
-                allBlock.get(i).setPosition(second_X-(allBlock.get(j).getW()/2), second_Y+(allBlock.get(j).getH()));
+              allBlock.get(i).setPosition(second_X+second_W/4, second_Y+second_H*groupsize_j);
             }
           }
-            //middle
-          if(first_X+(first_W/2) > second_X && first_X+(first_W/2) < (second_X+second_W) && first_Y > second_Y && first_Y < (second_Y+second_H)){
-            stroke(255,0,0);
+        }
+        else if(name_j == "repeat"){
+           if(first_X + first_W/2 > second_X + second_W/4 && first_X + first_W/2 <= second_X + second_W/2 && first_Y+5 > second_Y && first_Y+5 < second_Y +(second_H*groupsize_j)){
+            fill(255,0,0,120);  
+            rect(second_X + second_W/4, second_Y, second_W/4, second_H*groupsize_j);
+            noTint();
+            stroke(0,255,0);
+            strokeWeight(4);
+            line(second_X+second_W/4, second_Y+(second_H*groupsize_j), second_X+second_W+second_W/4, second_Y+(second_H*groupsize_j));
+            strokeWeight(1);
+            if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
+              allBlock.get(i).setPosition(second_X+second_W/4, second_Y+second_H*groupsize_j);
+            }
+          }
+        }
+        else if (name_j == "move"){
+          if(first_X + first_W/2 > second_X + second_W/2  && first_X + first_W/2 <= second_X + second_W && first_Y+5 > second_Y && first_Y+5 < second_Y +second_H){
+            fill(255,0,0,120);  
+            rect(second_X, second_Y, second_W, second_H*groupsize_j);
+            noTint();
+            stroke(0,255,0);
             strokeWeight(4);
             line(second_X, second_Y+second_H, second_X+second_W, second_Y+second_H);
             strokeWeight(1);
             if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
-                allBlock.get(i).setPosition(second_X, second_Y+(allBlock.get(j).getH()));
+              allBlock.get(i).setPosition(second_X, second_Y+second_H);
             }
           }
-        } 
-        
-        if(name_j == "run"){
-            if(first_X+(first_W/2) > second_X && first_X+(first_W/2) < (second_X+second_W) && first_Y > second_Y && first_Y < (second_Y+second_H)){
-            //middle
-            stroke(255,0,0);
+        }
+        else if (name_j == "run"){
+          if(first_X + first_W/2 > second_X  && first_X + first_W/2 <= second_X + second_W/4 && first_Y+5 > second_Y && first_Y+5 < second_Y +(second_H*groupsize_j)){
+            fill(255,0,0,120);  
+            rect(second_X, second_Y, second_W, second_H*groupsize_j);
+            noTint();
+            stroke(0,255,0);
             strokeWeight(4);
-            line(second_X, second_Y+second_H, second_X+second_W, second_Y+second_H);
+            line(second_X, second_Y+second_H*groupsize_j, second_X+second_W, second_Y+second_H*groupsize_j);
             strokeWeight(1);
             if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
-                allBlock.get(i).setPosition(second_X, second_Y+(allBlock.get(j).getH()));
-                //println(allBlock.get(j));
-                //println(allBlock.get(j).getNode());
-                //println(allBlock.get(j).getname());
-                //println(allBlock.get(i));
-                //println(allBlock.get(i).getNode());
-                //println(allBlock.get(i).getname());
-                allBlock.get(j).addCommand(allBlock.get(i).getNode());    
+              print(groupsize_j);
+              allBlock.get(i).setPosition(second_X, second_Y+second_H*groupsize_j);
             }
           }
-        }        
+        }
       }
     }
   }
@@ -478,7 +505,7 @@ Boolean checklowerBlock(Command Block_i){
     upper_H = upperBlock.getH();
     lower_X = allBlock.get(i).getX();
     lower_Y = allBlock.get(i).getY();
-    if((lower_X == upper_X && lower_Y == upper_Y+upper_H) || (lower_X == upper_X+(upper_W/2) && lower_Y == upper_Y+upper_H) || (lower_X == upper_X-(upper_W/2) && lower_Y == upper_Y+upper_H)){
+    if((lower_X == upper_X && lower_Y == upper_Y+upper_H) || (lower_X == upper_X+(upper_W/4) && lower_Y == upper_Y+upper_H) || (lower_X == upper_X-(upper_W/2) && lower_Y == upper_Y+upper_H)){
       return true;
     }
   }
@@ -501,13 +528,14 @@ ArrayList<Command> dragTogether(Command Block_i ,ArrayList<Command> GroupBlock_)
     upper_H = upperBlock.getH();
     lower_X = allBlock.get(i).getX();
     lower_Y = allBlock.get(i).getY();
-    if((lower_X == upper_X && lower_Y == upper_Y+upper_H)){
+     
+    if((lower_X == upper_X && lower_Y == upper_Y+upper_H) || (lower_X == upper_X+(upper_W/4) && lower_Y == upper_Y+upper_H) || (lower_X == upper_X-(upper_W/4) && lower_Y == upper_Y+upper_H)){
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
-    }else if((lower_X == upper_X+(upper_W/2) && lower_Y == upper_Y+upper_H)){
+    }else if((lower_X == upper_X-(upper_W/4)*2 && lower_Y == upper_Y+upper_H)){
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
-    }else if((lower_X == upper_X-(upper_W/2) && lower_Y == upper_Y+upper_H)){
+    }else if((lower_X == upper_X-(upper_W/4)*3 && lower_Y == upper_Y+upper_H)){
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
     }

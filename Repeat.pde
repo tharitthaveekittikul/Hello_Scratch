@@ -1,5 +1,5 @@
 class Repeat extends Command{
-  int w = 150, h = 30;
+  int w = 200, h = 30;
   int x = mouseX-(w/2) , y = mouseY-(h/2);
   String name ;
   String round ;
@@ -42,6 +42,11 @@ class Repeat extends Command{
   
   int getH(){
     return h;
+  }
+  
+  void setGroupSize(int groupsize_){
+    groupsize = 1 + groupsize_ ;
+
   }
   
   void setPosition(int x_, int y_){

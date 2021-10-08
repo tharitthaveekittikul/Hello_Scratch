@@ -16,7 +16,7 @@ class Button{
     fill(0);
     textAlign(CENTER);
     textSize(20);
-    text(name,x+50,y+25);
+    text(name,x+40,y+25);
     
   }
   
