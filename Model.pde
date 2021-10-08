@@ -32,6 +32,14 @@ class Model{
     return Integer.parseInt(step);
   }
   
+  void setX(int x_){
+    x = x_;
+  }
+  
+  void setY(int y_){
+    y = y_;
+  }
+  
   
   void Move(){
     x = x + getStep();

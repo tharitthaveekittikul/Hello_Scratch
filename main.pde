@@ -10,6 +10,8 @@ Button rotateButton;
 Button startButton;
 Button flagButton;
 Button setButton;
+Button setXButton;
+Button setYButton;
 
 TextBox moveStepBox;
 TextBox angleBox;
@@ -24,6 +26,8 @@ TextBox opIfElseBox;
 TextBox secondVal2Box;
 TextBox keynameBox;
 TextBox valueBox;
+TextBox setXBox;
+TextBox setYBox;
 
 Model cat;
 Bin bin;
@@ -55,6 +59,8 @@ void setup(){
   rotateButton = new Button("Rotate:",50,250,150,40);
   flagButton = new Button("Run",50,5,150,40);
   setButton = new Button("Set",240,295,50,30);
+  setXButton = new Button("Set X:",50,335,150,40);
+  setYButton = new Button("Set Y:",50,385,150,40);
   
   //Textbox---------------------------------------------
   firstValBox = new TextBox(115,55,50,30,10);//if
@@ -68,6 +74,8 @@ void setup(){
   angleBox = new TextBox(130,255,40,30,10); //rotate
   keynameBox = new TextBox(10,295,100,30,10);
   valueBox = new TextBox(130,295,100,30,10);
+  setXBox = new TextBox(120,340,50,30,10);
+  setYBox = new TextBox(120,390,50,30,10);
   
   //Block-----------------------------------------------
   allBlock = new ArrayList<Command>();
@@ -94,9 +102,18 @@ void traverse(Command c){
       //cat.setAngle(c.getnodeChild(i).getvalChild(0));
       runCat();
       cat.Rotate(Float.parseFloat(c.getnodeChild(i).getvalChild(0)));
-      
-      
     }
+    if ( c.getvalChild(i).equals("setX") ){
+      //cat.setAngle(c.getnodeChild(i).getvalChild(0));
+      runCat();
+      cat.setX(Integer.parseInt(c.getnodeChild(i).getvalChild(0)));
+    }
+    if ( c.getvalChild(i).equals("setY") ){
+      //cat.setAngle(c.getnodeChild(i).getvalChild(0));
+      runCat();
+      cat.setY(Integer.parseInt(c.getnodeChild(i).getvalChild(0)));
+    }
+    
     if ( c.getvalChild(i).equals("repeat") ){
       int number = Integer.parseInt(c.getnodeChild(i).getvalChild(0)); //n of repeat
       for ( int j = 0 ; j < number ; j++) {
@@ -378,6 +395,40 @@ void mouseDragged(){
     }
     
   }
+  if(setXButton.pressed()){
+    if(setXBox.getValue() != ""){
+      println("use setX");
+      String keyname = setXBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(setXBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("setX",keyname));
+      setXBox.resetTextvalue();
+    }
+    else{
+      println("please insert value");
+    }
+    
+  }
+  if(setYButton.pressed()){
+    if(setYBox.getValue() != ""){
+      println("use setY");
+      String keyname = setYBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(setYBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("setY",keyname));
+      setYBox.resetTextvalue();
+    }
+    else{
+      println("please insert value");
+    }
+    
+  }
   
 }
 
@@ -399,6 +450,8 @@ void draw(){
   moveButton.display();
   rotateButton.display();
   setButton.display();
+  setXButton.display();
+  setYButton.display();
   
   //TextBox--------------------
   firstValBox.draw();
@@ -411,6 +464,8 @@ void draw(){
   angleBox.draw();
   repeatBox.draw();
   keynameBox.draw();
+  setXBox.draw();
+  setYBox.draw();
   fill(0);
   textSize(20);
   text("=",115,307);
@@ -418,6 +473,7 @@ void draw(){
   sortBlockorder();
   runCat();   
   bin.display();
+  
   //variables.display();
   //for(int i = 0 ; i < variables.getSize();i++){
   //  println(variables.variable.keySet().toArray()[i]); // keyname

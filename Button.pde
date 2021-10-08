@@ -69,6 +69,18 @@ class Button{
         return true;
       }
     }
+    if (name == "Set X:"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
+    if (name == "Set Y:"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
     return false;
   }  
 }
