@@ -9,6 +9,7 @@ Button moveButton;
 Button rotateButton;
 Button startButton;
 Button flagButton;
+Button setButton;
 
 TextBox moveStepBox;
 TextBox angleBox;
@@ -21,6 +22,8 @@ TextBox secondValBox;
 TextBox firstVal2Box;
 TextBox opIfElseBox;
 TextBox secondVal2Box;
+TextBox keynameBox;
+TextBox valueBox;
 
 Model cat;
 Bin bin;
@@ -30,12 +33,17 @@ ArrayList<Command> Root;
 ArrayList<Command> groupBlock;
 
 Root start;
-
 Node temp;
+
+//ArrayList<Variable> variables;
+Variable variable;
+ArrayList<Variable> variables;
+int var_y;
+
 
 void setup(){
   size(1600,900);
-  cat = new Model(); 
+  cat = new Model();  
   bin = new Bin();
   
   //Button----------------------------------------------
@@ -46,22 +54,31 @@ void setup(){
   moveButton = new Button("Move:",50,200,150,40);
   rotateButton = new Button("Rotate:",50,250,150,40);
   flagButton = new Button("Run",50,5,150,40);
+  setButton = new Button("Set",240,295,50,30);
   
   //Textbox---------------------------------------------
-  firstValBox = new TextBox(115,55,50,30,6);//if
+  firstValBox = new TextBox(115,55,50,30,10);//if
   opIfBox = new TextBox(180,55,30,30,3);
   secondValBox = new TextBox(225,55,50,30,6);
-  firstVal2Box = new TextBox(130,105,50,30,6);//if elsse 
+  firstVal2Box = new TextBox(130,105,50,30,10);//if elsse 
   opIfElseBox = new TextBox(188,105,30,30,3);
   secondVal2Box = new TextBox(225,105,50,30,6);
-  repeatBox = new TextBox(140,155,50,30,3);//repeat 
-  moveStepBox = new TextBox(130,205,40,30,5);//move
-  angleBox = new TextBox(130,255,40,30,5); //rotate
+  repeatBox = new TextBox(140,155,50,30,10);//repeat 
+  moveStepBox = new TextBox(130,205,40,30,10);//move
+  angleBox = new TextBox(130,255,40,30,10); //rotate
+  keynameBox = new TextBox(10,295,100,30,10);
+  valueBox = new TextBox(130,295,100,30,10);
   
   //Block-----------------------------------------------
   allBlock = new ArrayList<Command>();
   Root = new ArrayList<Command>();
   groupBlock = new ArrayList<Command>();  
+  
+  //variables = new ArrayList<Variable>();
+  variables = new ArrayList<Variable>();
+  var_y = 490;
+  
+  //keys = new ArrayList(variables.variable.keySet());
    
 }
 
@@ -69,11 +86,16 @@ void traverse(Command c){
   for (int i = 0 ; i < c.getchildSize() ; i++){
     if ( c.getvalChild(i).equals("move") ){
       cat.setStep(c.getnodeChild(i).getvalChild(0));
+      runCat();
       cat.Move();
+      
     }
     if ( c.getvalChild(i).equals("rotate") ){
       //cat.setAngle(c.getnodeChild(i).getvalChild(0));
+      runCat();
       cat.Rotate(Float.parseFloat(c.getnodeChild(i).getvalChild(0)));
+      
+      
     }
     if ( c.getvalChild(i).equals("repeat") ){
       int number = Integer.parseInt(c.getnodeChild(i).getvalChild(0)); //n of repeat
@@ -162,6 +184,8 @@ void mouseClicked(){
   if(startButton.pressed()){
     println("start");
     traverse(start);
+    
+    //variables.get(0).changeValue(variables.get(0).getKey(),10);
     //t = new Tree();
 
     //MANUAL1
@@ -219,6 +243,41 @@ void mouseClicked(){
       allBlock.add(start);
       //Root.add(new Root( "Run", str(Root.size()+1)));
   }
+  
+  if(setButton.pressed()){
+    //if(keynameBox.getValue() != "" && valueBox.getValue() != ""){
+    //  for(int i = 0 ; i < variables.size();i++){
+    //    if(keynameBox.getValue().equals(variables.get(i).getValue(variables.get(i)))){
+    //      println("Same");
+    //    }
+    //  }
+    //  println("set");
+    //  variables.add(new Variable(keynameBox.getValue(),valueBox.getValue()));
+    //  for(int i = 0 ; i < variables.size();i++){
+    //    variables.get(i).setY(20);
+    //  }
+    
+    //  keynameBox.resetTextvalue();
+    //  valueBox.resetTextvalue();
+    //}
+    println("Set");
+    if(keynameBox.getValue() != "" && valueBox.getValue() != ""){
+      variable = new Variable(var_y);
+      variable.put(keynameBox.getValue(),valueBox.getValue());
+      for(int i = 0 ; i < variables.size() ; i++){
+        if(keynameBox.getValue().equals(variables.get(i).getKey())){
+          variables.get(i).setValue(variables.get(i).getKey(),variable.getValue(variable.getKey()));
+          keynameBox.resetTextvalue();
+          valueBox.resetTextvalue();
+          return;
+        }
+      }
+      variables.add(variable);
+      var_y += 20;
+      keynameBox.resetTextvalue();
+      valueBox.resetTextvalue();
+    }
+  }
 }
 
 void mouseDragged(){
@@ -226,7 +285,13 @@ void mouseDragged(){
   if (conditionButton.pressed()){
     if(firstValBox.getValue() != "" && checkOperator() && secondValBox.getValue() != ""){
       println("use if");
-      allBlock.add(new ConditionIf("if", firstValBox.getValue(), opIfBox.getValue(), secondValBox.getValue()));
+      String keyname = firstValBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(firstValBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new ConditionIf("if", keyname, opIfBox.getValue(), secondValBox.getValue()));
       firstValBox.resetTextvalue();
       opIfBox.resetTextvalue();
       secondValBox.resetTextvalue();
@@ -240,7 +305,13 @@ void mouseDragged(){
   if (conditionElseButton.pressed()){
     if(firstVal2Box.getValue() != "" && checkOperator() && secondVal2Box.getValue() != ""){
       println("use if else");
-      allBlock.add(new ConditionIfElse("ifelse", firstVal2Box.getValue(), opIfElseBox.getValue(), secondVal2Box.getValue()));
+      String keyname = firstVal2Box.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(firstVal2Box.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new ConditionIfElse("ifelse", keyname, opIfElseBox.getValue(), secondVal2Box.getValue()));
       firstVal2Box.resetTextvalue();
       opIfElseBox.resetTextvalue();
       secondVal2Box.resetTextvalue();
@@ -253,7 +324,13 @@ void mouseDragged(){
   if(repeatButton.pressed()){
     if(repeatBox.getValue() != ""){
       println("use repeat");
-      allBlock.add(new Repeat("repeat", repeatBox.getValue()));
+      String keyname = repeatBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(repeatBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Repeat("repeat", keyname));
       repeatBox.resetTextvalue();
       //repeatList.add(new Repeat(repeatBox.getValue()));
 
@@ -266,7 +343,13 @@ void mouseDragged(){
   if(moveButton.pressed()){
     if(moveStepBox.getValue() != ""){
       println("use move");
-      allBlock.add(new Motion("move",moveStepBox.getValue()));
+      String keyname = moveStepBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(moveStepBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("move",keyname));
       moveStepBox.resetTextvalue();
 
       
@@ -281,7 +364,13 @@ void mouseDragged(){
   if(rotateButton.pressed()){
     if(angleBox.getValue() != ""){
       println("use rotate");
-      allBlock.add(new Motion("rotate",angleBox.getValue()));
+      String keyname = angleBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(angleBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("rotate",keyname));
       angleBox.resetTextvalue();
     }
     else{
@@ -309,6 +398,7 @@ void draw(){
   //moves
   moveButton.display();
   rotateButton.display();
+  setButton.display();
   
   //TextBox--------------------
   firstValBox.draw();
@@ -320,9 +410,32 @@ void draw(){
   moveStepBox.draw();
   angleBox.draw();
   repeatBox.draw();
+  keynameBox.draw();
+  fill(0);
+  textSize(20);
+  text("=",115,307);
+  valueBox.draw();
   sortBlockorder();
   runCat();   
   bin.display();
+  //variables.display();
+  //for(int i = 0 ; i < variables.getSize();i++){
+  //  println(variables.variable.keySet().toArray()[i]); // keyname
+  //  text(variables.variable.keySet().toArray()[i] + " = " + variables.variable.get(variables.variable.keySet().toArray()[i]),1140,var_y);
+  //  if(setButton.contains()){
+  //    var_y += 20;    
+  //  }
+  //}
+  for(int i = 0 ; i < variables.size() ; i++){
+    //println(variables);
+    variables.get(i).display();
+  }
+  
+  
+  
+  //for(int i = 0; i < variables.size();i++){
+  //  variables.get(i).display();
+  //}
   
   //Block-----------------------------------------
   for(int i = 0; i < allBlock.size(); i++){
@@ -420,7 +533,7 @@ void connectBlock(){
             }
           }
         }
-        if(name_j == "move"){
+        if(name_j == "move" || name_j == "rotate"){
             // left
           if((first_X+first_W) > second_X && (first_X+first_W) < (second_X+second_W) && first_Y+5 > second_Y && first_Y+5 < (second_Y+second_H)){
             stroke(255,0,0);
@@ -537,6 +650,7 @@ ArrayList<Command> dragTogether(Command Block_i ,ArrayList<Command> GroupBlock_)
   }
   return groupBlock;
 }
+
 void useBin(){
   int first_x;
   int first_y;
@@ -554,7 +668,8 @@ void useBin(){
     if(first_x + (first_w)/2 > bin_x && first_x + (first_w)/2< (bin_x+bin_w) && first_y + (first_h)/2 > bin_y && first_y + (first_h)/2 < (bin_y+bin_h)){
       fill(255,0,0,120);  
       rect(bin_x,bin_y,bin_w,bin_h);
-      if(allBlock.get(i).contains() == false){
+      noTint();
+      if(allBlock.get(i).contains() == false && bin.contains() == false){
         allBlock.remove(i);
       }
     }

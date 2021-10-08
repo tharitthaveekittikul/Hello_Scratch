@@ -15,8 +15,8 @@ class Button{
     rect(x,y,w,h);
     fill(0);
     textAlign(CENTER);
-    textSize(20);
-    text(name,x+50,y+25);
+    textSize(16);
+    text(name,x+30,y+25);
     
   }
   
@@ -58,6 +58,12 @@ class Button{
       }
     }
     if (name == "Rotate:"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
+    if (name == "Set"){
       if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
         //return to main mouseDragged()
         return true;
