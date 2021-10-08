@@ -72,10 +72,8 @@ class Motion extends Command{
   
   void drag(){
     if(mousePressed){
-      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
-        x = x + (mouseX - pmouseX);
-        y = y + (mouseY - pmouseY);
-      }
+      x = x + (mouseX - pmouseX);
+      y = y + (mouseY - pmouseY);
     }
   }
   
@@ -86,6 +84,12 @@ class Motion extends Command{
       }
     }    
     return false;
-  }
+  } 
   
+  boolean inBlock(){
+    if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
+      return true;
+    }
+    return false;
+  }
 }

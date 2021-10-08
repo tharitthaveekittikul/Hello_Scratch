@@ -133,6 +133,13 @@ class ConditionIfElse extends Command{
     
   }
   
+  void drag(){
+    if(mousePressed){
+      x = x + (mouseX - pmouseX);
+      y = y + (mouseY - pmouseY);
+    }
+  }
+  
   boolean contains(){
     if(mousePressed){
       if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
@@ -140,14 +147,12 @@ class ConditionIfElse extends Command{
       }
     }    
     return false;
-  }
+  } 
   
-  void drag(){
-    if(mousePressed){
-      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
-        x = x + (mouseX - pmouseX);
-        y = y + (mouseY - pmouseY);
-      }
-    }  
+  boolean inBlock(){
+    if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
+      return true;
+    }
+    return false;
   }
 }
