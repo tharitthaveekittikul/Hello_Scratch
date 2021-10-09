@@ -15,33 +15,33 @@ class Button{
     rect(x,y,w,h);
     fill(0);
     textAlign(CENTER);
-    textSize(20);
-    text(name,x+40,y+25);
+    textSize(16);
+    text(name,x+30,y+25);
     
   }
   
   boolean pressed(){
     if(name == "if :"){
       if(mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
     if(name == "if else:"){
       if(mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
     if(name == "repeat:"){
       if(mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
     if (name == "Move:"){
       if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
-        //return to main mouseClick()
+        //return to main mouseDragged()
         return true;
       }
     }
@@ -57,8 +57,30 @@ class Button{
         return true;
       }
     }
+    if (name == "Rotate:"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
+    if (name == "Set"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
+    if (name == "Set X:"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
+    if (name == "Set Y:"){
+      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
+        //return to main mouseDragged()
+        return true;
+      }
+    }
     return false;
   }  
 }
-  
-  

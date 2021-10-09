@@ -6,10 +6,15 @@ Button conditionButton;
 Button conditionElseButton;
 Button repeatButton;
 Button moveButton;
+Button rotateButton;
 Button startButton;
 Button flagButton;
+Button setButton;
+Button setXButton;
+Button setYButton;
 
 TextBox moveStepBox;
+TextBox angleBox;
 TextBox repeatBox;
 //for conditionButton
 TextBox firstValBox;
@@ -19,20 +24,31 @@ TextBox secondValBox;
 TextBox firstVal2Box;
 TextBox opIfElseBox;
 TextBox secondVal2Box;
+TextBox keynameBox;
+TextBox valueBox;
+TextBox setXBox;
+TextBox setYBox;
 
 Model cat;
+Bin bin;
 Tree t;
 ArrayList<Command> allBlock;
 ArrayList<Command> Root;
 ArrayList<Command> groupBlock;
 
 Root start;
-
 Node temp;
+
+//ArrayList<Variable> variables;
+Variable variable;
+ArrayList<Variable> variables;
+int var_y;
+
 
 void setup(){
   size(1600,900);
   cat = new Model();  
+  bin = new Bin();
   
   //Button----------------------------------------------
   startButton = new Button("start",900,20,150,40);
@@ -40,22 +56,37 @@ void setup(){
   conditionElseButton = new Button("if else:",50,100,230,40);
   repeatButton = new Button("repeat:",50,150,180,40);
   moveButton = new Button("Move:",50,200,150,40);
+  rotateButton = new Button("Rotate:",50,250,150,40);
   flagButton = new Button("Run",50,5,150,40);
+  setButton = new Button("Set",240,295,50,30);
+  setXButton = new Button("Set X:",50,335,150,40);
+  setYButton = new Button("Set Y:",50,385,150,40);
   
   //Textbox---------------------------------------------
-  firstValBox = new TextBox(115,55,50,30,6);//if
+  firstValBox = new TextBox(115,55,50,30,10);//if
   opIfBox = new TextBox(180,55,30,30,3);
   secondValBox = new TextBox(225,55,50,30,6);
-  firstVal2Box = new TextBox(130,105,50,30,6);//if elsse 
+  firstVal2Box = new TextBox(130,105,50,30,10);//if elsse 
   opIfElseBox = new TextBox(188,105,30,30,3);
   secondVal2Box = new TextBox(225,105,50,30,6);
-  repeatBox = new TextBox(140,155,50,30,3);//repeat 
-  moveStepBox = new TextBox(130,205,40,30,3);//move
+  repeatBox = new TextBox(140,155,50,30,10);//repeat 
+  moveStepBox = new TextBox(130,205,40,30,10);//move
+  angleBox = new TextBox(130,255,40,30,10); //rotate
+  keynameBox = new TextBox(10,295,100,30,10);
+  valueBox = new TextBox(130,295,100,30,10);
+  setXBox = new TextBox(120,340,50,30,10);
+  setYBox = new TextBox(120,390,50,30,10);
   
   //Block-----------------------------------------------
   allBlock = new ArrayList<Command>();
   Root = new ArrayList<Command>();
   groupBlock = new ArrayList<Command>();  
+  
+  //variables = new ArrayList<Variable>();
+  variables = new ArrayList<Variable>();
+  var_y = 490;
+  
+  //keys = new ArrayList(variables.variable.keySet());
    
 }
 
@@ -63,8 +94,26 @@ void traverse(Command c){
   for (int i = 0 ; i < c.getchildSize() ; i++){
     if ( c.getvalChild(i).equals("move") ){
       cat.setStep(c.getnodeChild(i).getvalChild(0));
+      runCat();
       cat.Move();
+      
     }
+    if ( c.getvalChild(i).equals("rotate") ){
+      //cat.setAngle(c.getnodeChild(i).getvalChild(0));
+      runCat();
+      cat.Rotate(Float.parseFloat(c.getnodeChild(i).getvalChild(0)));
+    }
+    if ( c.getvalChild(i).equals("setX") ){
+      //cat.setAngle(c.getnodeChild(i).getvalChild(0));
+      runCat();
+      cat.setX(Integer.parseInt(c.getnodeChild(i).getvalChild(0)));
+    }
+    if ( c.getvalChild(i).equals("setY") ){
+      //cat.setAngle(c.getnodeChild(i).getvalChild(0));
+      runCat();
+      cat.setY(Integer.parseInt(c.getnodeChild(i).getvalChild(0)));
+    }
+    
     if ( c.getvalChild(i).equals("repeat") ){
       int number = Integer.parseInt(c.getnodeChild(i).getvalChild(0)); //n of repeat
       for ( int j = 0 ; j < number ; j++) {
@@ -147,11 +196,12 @@ void getparent(Command c,Command cm){
 }
 
 void mouseClicked(){
-  
-  //startButton-----------------------------------------------------------------------------------------------------------------
-  //if(startButton.pressed()){
-    //println("start");
-    //traverse(start);
+  if(startButton.pressed()){
+    println("start");
+    traverse(start);
+  }
+    
+    //variables.get(0).changeValue(variables.get(0).getKey(),10);
     //t = new Tree();
 
     //MANUAL1
@@ -170,56 +220,81 @@ void mouseClicked(){
     //traverse(start);
     //traversaltree(start,m1);
 
-    //checkFunction(repeatList.get(repeatList.size()-1));
-
-    //MANUAL TEST
-  //  Root start = new Root("run",str(Root.size()+1));
-  //  Repeat r1 = new Repeat("repeat","3");
-  //  println("Start:" + start);
-  //  println("r1:" + r1);
-  //  println("r1 node :" + r1.getNode());
-  //  start.addCommand(r1.getNode());
-  //  ConditionIf if1 = new ConditionIf("if","3",">","2");
-  //  Motion m1 = new Motion("move","10");
-  //  println("if1:" +if1);
-  //  println("m1:" +m1);
-  //  println("m1 node:" +m1.getNode());
-  //  if1.addCommand(m1.getNode());
-  //  println("r1:" + r1);
-  //  r1.addCommand(if1.getNode());
-  //  println("r1 node: " + r1.getNode());
-  //  ConditionIf if2 = new ConditionIf("if","3",">","2");
-  //  println(start);
-  //  start.addCommand(if2.getNode());
-  //  ConditionIfElse ifelse = new ConditionIfElse("ifelse","3","<","2");
-  //  if2.addCommand(ifelse.getNode());
-  //  Motion m2 = new Motion("move","20");
-  //  ifelse.addtrueCommand(m2.getNode());
-  //  Motion m3 = new Motion("move","30");
-  //  ifelse.addfalseCommand(m3.getNode());
-  //  //println(start.getchildSize());
-  //  traverse(start);
-  //  println("========traversaltree========");
-  //  getparent(start,m3);
-  //  println("FINISH");
-    
+    //////MANUAL TEST
+    //Root start = new Root("run",str(Root.size()+1));
+    //Repeat r1 = new Repeat("repeat","3");
+    //println("Start:" + start);
+    //println("r1:" + r1);
+    //println("r1 node :" + r1.getNode());
+    //start.addCommand(r1.getNode());
+    //ConditionIf if1 = new ConditionIf("if","3",">","2");
+    //Motion m1 = new Motion("move","10");
+    //println("if1:" +if1);
+    //println("m1:" +m1);
+    //println("m1 node:" +m1.getNode());
+    //if1.addCommand(m1.getNode());
+    //println("r1:" + r1);
+    //r1.addCommand(if1.getNode());
+    //println("r1 node: " + r1.getNode());
+    //ConditionIf if2 = new ConditionIf("if","3",">","2");
+    //println(start);
+    //start.addCommand(if2.getNode());
+    //ConditionIfElse ifelse = new ConditionIfElse("ifelse","3","<","2");
+    //if2.addCommand(ifelse.getNode());
+    //Motion m2 = new Motion("move","20");
+    //ifelse.addtrueCommand(m2.getNode());
+    //Motion m3 = new Motion("move","30");
+    //ifelse.addfalseCommand(m3.getNode());
+    ////println(start.getchildSize());
+    //traverse(start);
+    //println("========traversaltree========");
+    //getparent(start,m3);
+    //println("FINISH");
   //}
   
   if(flagButton.pressed()){
       println("add flag");
       start = new Root("run",str(Root.size()+1));
-      allBlock.add(start);      
+      allBlock.add(start);
       //Root.add(new Root( "Run", str(Root.size()+1)));
   }
   
+  if(setButton.pressed()){
+    println("Set");
+    if(keynameBox.getValue() != "" && valueBox.getValue() != ""){
+      variable = new Variable(var_y);
+      variable.put(keynameBox.getValue(),valueBox.getValue());
+      for(int i = 0 ; i < variables.size() ; i++){
+        if(keynameBox.getValue().equals(variables.get(i).getKey())){
+          variables.get(i).setValue(variables.get(i).getKey(),variable.getValue(variable.getKey()));
+          keynameBox.resetTextvalue();
+          valueBox.resetTextvalue();
+          return;
+        }
+      }
+      variables.add(variable);
+      var_y += 20;
+      keynameBox.resetTextvalue();
+      valueBox.resetTextvalue();
+   }
+  }
+  
 }
+
+
 
 void mouseDragged(){
   //if Button-------------------------------------------------------------------------------------------------------------
   if (conditionButton.pressed()){
     if(firstValBox.getValue() != "" && checkOperator() && secondValBox.getValue() != ""){
       println("use if");
-      allBlock.add(new ConditionIf("if", firstValBox.getValue(), opIfBox.getValue(), secondValBox.getValue()));
+      String keyname = firstValBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(firstValBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new ConditionIf("if", keyname, opIfBox.getValue(), secondValBox.getValue()));
       firstValBox.resetTextvalue();
       opIfBox.resetTextvalue();
       secondValBox.resetTextvalue();
@@ -233,7 +308,13 @@ void mouseDragged(){
   if (conditionElseButton.pressed()){
     if(firstVal2Box.getValue() != "" && checkOperator() && secondVal2Box.getValue() != ""){
       println("use if else");
-      allBlock.add(new ConditionIfElse("ifelse", firstVal2Box.getValue(), opIfElseBox.getValue(), secondVal2Box.getValue()));
+      String keyname = firstVal2Box.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(firstVal2Box.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new ConditionIfElse("ifelse", keyname, opIfElseBox.getValue(), secondVal2Box.getValue()));
       firstVal2Box.resetTextvalue();
       opIfElseBox.resetTextvalue();
       secondVal2Box.resetTextvalue();
@@ -246,7 +327,13 @@ void mouseDragged(){
   if(repeatButton.pressed()){
     if(repeatBox.getValue() != ""){
       println("use repeat");
-      allBlock.add(new Repeat("repeat", repeatBox.getValue()));
+      String keyname = repeatBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(repeatBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Repeat("repeat", keyname));
       repeatBox.resetTextvalue();
       //repeatList.add(new Repeat(repeatBox.getValue()));
 
@@ -259,7 +346,13 @@ void mouseDragged(){
   if(moveButton.pressed()){
     if(moveStepBox.getValue() != ""){
       println("use move");
-      allBlock.add(new Motion("move",moveStepBox.getValue()));
+      String keyname = moveStepBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(moveStepBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("move",keyname));
       moveStepBox.resetTextvalue();
 
       
@@ -270,6 +363,57 @@ void mouseDragged(){
     }else{
       println("please insert value");
     }
+  }
+  if(rotateButton.pressed()){
+    if(angleBox.getValue() != ""){
+      println("use rotate");
+      String keyname = angleBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(angleBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("rotate",keyname));
+      angleBox.resetTextvalue();
+    }
+    else{
+      println("please insert value");
+    }
+    
+  }
+  if(setXButton.pressed()){
+    if(setXBox.getValue() != ""){
+      println("use setX");
+      String keyname = setXBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(setXBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("setX",keyname));
+      setXBox.resetTextvalue();
+    }
+    else{
+      println("please insert value");
+    }
+    
+  }
+  if(setYButton.pressed()){
+    if(setYBox.getValue() != ""){
+      println("use setY");
+      String keyname = setYBox.getValue();
+      for(int i = 0 ; i < variables.size(); i++){
+        if(setYBox.getValue().equals(variables.get(i).getKey())){
+          keyname = String.valueOf(variables.get(i).getValue(variables.get(i).getKey()));
+        }
+      }
+      allBlock.add(new Motion("setY",keyname));
+      setYBox.resetTextvalue();
+    }
+    else{
+      println("please insert value");
+    }
+    
   }
   
 }
@@ -290,6 +434,10 @@ void draw(){
   repeatButton.display();
   //moves
   moveButton.display();
+  rotateButton.display();
+  setButton.display();
+  setXButton.display();
+  setYButton.display();
   
   //TextBox--------------------
   firstValBox.draw();
@@ -299,9 +447,37 @@ void draw(){
   opIfElseBox.draw();
   secondVal2Box.draw();
   moveStepBox.draw();
+  angleBox.draw();
   repeatBox.draw();
+  keynameBox.draw();
+  setXBox.draw();
+  setYBox.draw();
+  fill(0);
+  textSize(20);
+  text("=",115,307);
+  valueBox.draw();
   sortBlockorder();
   runCat();   
+  bin.display();
+  
+  //variables.display();
+  //for(int i = 0 ; i < variables.getSize();i++){
+  //  println(variables.variable.keySet().toArray()[i]); // keyname
+  //  text(variables.variable.keySet().toArray()[i] + " = " + variables.variable.get(variables.variable.keySet().toArray()[i]),1140,var_y);
+  //  if(setButton.contains()){
+  //    var_y += 20;    
+  //  }
+  //}
+  for(int i = 0 ; i < variables.size() ; i++){
+    //println(variables);
+    variables.get(i).display();
+  }
+  
+  
+  
+  //for(int i = 0; i < variables.size();i++){
+  //  variables.get(i).display();
+  //}
   
   //Block-----------------------------------------
   for(int i = 0; i < allBlock.size(); i++){
@@ -327,6 +503,7 @@ void draw(){
       }
    }
   connectBlock();
+  useBin();
   showCoordinates();
   
 }
@@ -335,6 +512,7 @@ void draw(){
 void runCat(){
   cat.display();
   cat.checkEdges();
+  //cat.Rotate(1);
 }
 
 void showCoordinates(){
@@ -429,9 +607,6 @@ void connectBlock(){
             rect(second_X + second_W/4, second_Y, second_W/4, second_H*groupsize_j);
             noTint();
             stroke(0,255,0);
-            strokeWeight(4);
-            line(second_X+second_W/4, second_Y+(second_H*groupsize_j), second_X+second_W+second_W/4, second_Y+(second_H*groupsize_j));
-            strokeWeight(1);
             if(allBlock.get(i).contains() == false && allBlock.get(j).contains() == false){
               allBlock.get(i).setPosition(second_X+second_W/4, second_Y+second_H*groupsize_j);
             }
@@ -470,6 +645,7 @@ void connectBlock(){
     }
   }
 }
+
 
 void sortBlockorder(){
   int firstBlock_Y;
@@ -535,10 +711,36 @@ ArrayList<Command> dragTogether(Command Block_i ,ArrayList<Command> GroupBlock_)
     }else if((lower_X == upper_X-(upper_W/4)*2 && lower_Y == upper_Y+upper_H)){
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
-    }else if((lower_X == upper_X-(upper_W/4)*3 && lower_Y == upper_Y+upper_H)){
+    }else if((lower_X == upper_X+(upper_W/2) && lower_Y == upper_Y+upper_H)){ //right
       groupBlock.add(allBlock.get(i));
       dragTogether(allBlock.get(i), groupBlock);//recursive
     }
   }
   return groupBlock;
+}
+
+void useBin(){
+  int first_x;
+  int first_y;
+  int first_w;
+  int first_h;
+  int bin_x = bin.getX();
+  int bin_y = bin.getY();
+  int bin_w = bin.getW();
+  int bin_h = bin.getH();
+  for(int i = 0 ; i < allBlock.size(); i++){
+    first_x = allBlock.get(i).getX();
+    first_y = allBlock.get(i).getY();
+    first_w = allBlock.get(i).getW();
+    first_h = allBlock.get(i).getH();
+    if(first_x + (first_w)/2 > bin_x && first_x + (first_w)/2< (bin_x+bin_w) && first_y + (first_h)/2 > bin_y && first_y + (first_h)/2 < (bin_y+bin_h)){
+      fill(255,0,0,120);  
+      rect(bin_x,bin_y,bin_w,bin_h);
+      noTint();
+      if(allBlock.get(i).contains() == false && bin.contains() == false){
+        allBlock.remove(i);
+      }
+    }
+    
+  }
 }
