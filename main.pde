@@ -99,7 +99,6 @@ void traverse(Command c){ //do command of start's child
       cat.setStep(c.getnodeChild(i).getvalChild(0));
       runCat();
       cat.Move();
-      
     }
     if ( c.getvalChild(i).equals("rotate") ){
       //cat.setAngle(c.getnodeChild(i).getvalChild(0));
@@ -152,7 +151,7 @@ Command nodeinClass(Node n){ //get class of that node
 
 Command getparent(Command c,Command cm){
   for (int i = 0 ; i < c.getchildSize() ; i++){
-    if ( c.getvalChild(i).equals("move") ){
+    if ( c.getvalChild(i).equals("move") || c.getvalChild(i).equals("rotate") || c.getvalChild(i).equals("setX") || c.getvalChild(i).equals("setY") ){
       //println("Move by " + c.getnodeChild(i).getvalChild(0));
       if ( c.getnodeChild(i) == cm.getNode() ) {
         if ( c.getVal().equals("ifTRUE") || c.getVal().equals("ifFALSE")){
@@ -219,7 +218,7 @@ Command getparent(Command c,Command cm){
 void traversemove(Command c, ArrayList<Command> nodeTree){ //find child (node)
   for ( int i = 0 ; i < c.getchildSize() ; i++ ){
     //println("traversemove " + c.getvalChild(i));
-    if ( c.getvalChild(i).equals("move") ){
+    if ( c.getvalChild(i).equals("move") || c.getvalChild(i).equals("rotate") || c.getvalChild(i).equals("setX") || c.getvalChild(i).equals("setY")){
       nodeTree.add(c.getnodeChild(i));
     }
     if ( c.getvalChild(i).equals("repeat") ){
