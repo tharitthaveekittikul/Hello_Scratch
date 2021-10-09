@@ -19,6 +19,10 @@ class Command{
     root.addexistChild(n);
   }
   
+  void removeCommand(Node n){
+    root.removechild(n); 
+  }
+  
   void removechild(Node node){
     children.remove(node);
   }
@@ -81,10 +85,8 @@ class Command{
   
   void drag(){
     if(mousePressed){
-      if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
-        x = x + (mouseX - pmouseX);
-        y = y + (mouseY - pmouseY);
-      }
+      x = x + (mouseX - pmouseX);
+      y = y + (mouseY - pmouseY);
     }
   }
   
@@ -96,4 +98,11 @@ class Command{
     }    
     return false;
   } 
+  
+  boolean inBlock(){
+    if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= y + h){
+      return true;
+    }
+    return false;
+  }
 }

@@ -39,6 +39,7 @@ class TextBox{
         keyReleased = true;
         keyCounter = 0;
         previousKeyCounter = 0;
+        c = keyInput;
       }
       if(keyPressed && c != key && keyCode != SHIFT){
         keyCounter = millis();
