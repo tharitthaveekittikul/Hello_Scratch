@@ -31,7 +31,6 @@ TextBox setYBox;
 
 Model cat;
 Bin bin;
-Tree t;
 ArrayList<Command> allBlock;
 ArrayList<Command> Root;
 ArrayList<Command> groupBlock;
@@ -44,10 +43,17 @@ Variable variable;
 ArrayList<Variable> variables;
 int var_y;
 
-Command pointer, allBlocktemp, pointertemp, distemp, pointerdistemp, parenttemp;
+Command pointer;
+
+//chceckconnectblock
+Command connecter, pointertemp;
+Command father, pointerdistemp, parenttemp;
+
+
+
 int my,mx,oldx,oldy;
 boolean released = true, blockCheck, blockdisCheck;
-ArrayList<Command> nodeTree, connectBlockTemp, childTemp, childTemp1, childTemp2, childpointerdisTemp, connectBlockTemp1;
+ArrayList<Command> nodeTree, connectBlockTemp, childTemp, childdiscon, childTemp2, childpointerdisTemp, connectBlockTemp1;
 int ytemp, ydistemp, disconytemp;
 
 
@@ -85,8 +91,7 @@ void setup(){
   
   //Block-----------------------------------------------
   allBlock = new ArrayList<Command>();
-  Root = new ArrayList<Command>();
-  groupBlock = new ArrayList<Command>();  
+  Root = new ArrayList<Command>();  
   
   variables = new ArrayList<Variable>();
   var_y = 490;
@@ -174,7 +179,7 @@ Command getparent(Command c,Command cm){
             return nodeinClass(temp);
             //break;
         }
-        println("Fond Laew Ja : " + c.getVal());
+        //println("Fond Laew Ja : " + c.getVal());
         return nodeinClass(c.getNode());
         //break;
       }
@@ -240,8 +245,11 @@ void traversemove(Command c, ArrayList<Command> nodeTree){ //find child (node)
 
 void mouseClicked(){
   if(startButton.pressed()){
-    println("start");
-    traverse(start);
+    for(int i = 0 ; i < allBlock.size(); i++){
+      if(allBlock.get(i) == start){
+        traverse(allBlock.get(i));
+      }
+    }
   }
   
   if(flagButton.pressed()){
@@ -352,16 +360,12 @@ void mousePressed(){
       }
       allBlock.add(new Motion("move",keyname));
       moveStepBox.resetTextvalue();
-
-      
-      //repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
-
-      
-      //repeatList.get(repeatList.size()-1).setRight(motions.get(motions.size()-1).motion);
     }else{
       println("please insert value");
     }
   }
+  
+  //rotateButton----------------------------------------------------------------------------------------------------------
   if(rotateButton.pressed()){
     if(angleBox.getValue() != ""){
       println("use rotate");
@@ -376,9 +380,10 @@ void mousePressed(){
     }
     else{
       println("please insert value");
-    }
-    
+    }  
   }
+  
+  //setXButton-----------------------------------------------------------------------------------------------------------------------------------
   if(setXButton.pressed()){
     if(setXBox.getValue() != ""){
       println("use setX");
@@ -393,9 +398,10 @@ void mousePressed(){
     }
     else{
       println("please insert value");
-    }
-    
+    } 
   }
+  
+  //setYButton------------------------------------------------------------------------------------------------------------------------------------
   if(setYButton.pressed()){
     if(setYBox.getValue() != ""){
       println("use setY");
@@ -467,22 +473,11 @@ void draw(){
     if ( pointer != null ){ //if there is a pointer then drag it
       nodeTree = new ArrayList<Command>();
       traversemove(pointer,nodeTree);
-      //println("nodeTree = " + nodeTree);
-      pointer.drag();
-      //println(pointer);
-      
-      //for ( int i = 0 ; i < allBlock.size() ; i++ ){
-      //  println("getparent = " + getparent(allBlock.get(i),pointer)); 
-      //}
-      
+      pointer.drag();      
       if (nodeTree != null){
         for ( int i = 0 ; i < nodeTree.size() ; i++ ){     
-          for ( int j = 0 ; j < allBlock.size() ; j++ ){
-            if ( allBlock.get(j).getNode() == nodeTree.get(i) ) {
-               allBlock.get(j).drag();
-               allBlock.get(j).display();
-            }
-          }
+           nodeinClass((Node)nodeTree.get(i)).drag();
+           nodeinClass((Node)nodeTree.get(i)).display();  
         }
       }
     }
@@ -495,7 +490,6 @@ void draw(){
     //println(variables);
     variables.get(i).display();
   }
-  
 
   checkconnectBlock();
   connectBlock();
@@ -515,11 +509,12 @@ void checkconnectBlock(){ //first = pointer
           //println(allBlock.get(i).getname());
           if ( allBlock.get(i).getname().equals("repeat") || allBlock.get(i).getname().equals("if")){
             pointertemp = pointer;
-            allBlocktemp = allBlock.get(i);
+            connecter = allBlock.get(i);
             ytemp = 0;
-            traversemove(allBlocktemp,childTemp);
+            traversemove(connecter,childTemp);//add child of 
             if ( childTemp != null ){
               for ( int j = 0 ; j < childTemp.size() ; j++ ){
+                
                 ytemp += 30;
               }
             }
@@ -535,11 +530,11 @@ void checkconnectBlock(){ //first = pointer
             //println("ccB " + ytemp);
           }
           
-          if ( allBlock.get(i).getname().equals("run")){
+          else if ( allBlock.get(i).getname().equals("run")){
             pointertemp = pointer;
-            allBlocktemp = allBlock.get(i);
+            connecter = allBlock.get(i);
             ytemp = 0;
-            traversemove(allBlocktemp,childTemp);
+            traversemove(connecter,childTemp);
             if ( childTemp != null ){
               for ( int j = 0 ; j < childTemp.size() ; j++ ){
                 ytemp += 30;
@@ -564,11 +559,11 @@ void checkconnectBlock(){ //first = pointer
 
 void checkdisconnectBlock(){
   if (mousePressed){
-    childTemp1 = new ArrayList<Command>();
+    childdiscon = new ArrayList<Command>();
     for ( int i = 0 ; i < allBlock.size() ; i++ ){
       if ( pointer != null && allBlock.get(i) != null && allBlock.get(i) != pointer && getparent(allBlock.get(i),pointer) != null && pointer.contains() == true){
         //println("getparent = " + getparent(allBlock.get(i),pointer)); 
-        distemp = getparent(allBlock.get(i),pointer);
+        father = getparent(allBlock.get(i),pointer);
         pointerdistemp = pointer;
         //traversemove(distemp,childTemp1);
         //println("childTemp1 " + childTemp1);
@@ -585,25 +580,25 @@ void checkdisconnectBlock(){
 }
 
 void connectBlock(){
-  if ( blockCheck == true && pointertemp.inBlock() == true && allBlocktemp.inBlock() == true ) {
+  if ( blockCheck == true && pointertemp.inBlock() == true && connecter.inBlock() == true ) {
     if (released == true){ //released == true
-    println("allBlocktemp = " + allBlocktemp);
-      if ( allBlocktemp.getname().equals("repeat") ){
+    println("allBlocktemp = " + connecter);
+      if ( connecter.getname().equals("repeat") ){
         //println("hahaha " + allBlocktemp.getname());
         //for ( int i = 1 ; i < allBlocktemp.getchildSize() ; i++ ){
         //  //println(allBlocktemp.getnodeChild(i));
         //  childytemp += allBlocktemp.getnodeChild(i).getY();
         //}
         //println("childytemp = " + ytemp);
-        int cbtempx = (allBlocktemp.getX()+allBlocktemp.getW()/4);
-        int cbtempy = (allBlocktemp.getY()+allBlocktemp.getH()+ytemp) + 30;
+        int cbtempx = (connecter.getX()+connecter.getW()/4);
+        int cbtempy = (connecter.getY()+connecter.getH()+ytemp) + 30;
         connectBlockTemp = new ArrayList<Command>();
         //connectBlockTemp.add(pointertemp);
         traversemove(pointertemp,connectBlockTemp);
         pointertemp.setPosition(cbtempx,cbtempy-30);
         
         connectBlockTemp1 = new ArrayList<Command>();
-        traversemove(allBlocktemp,connectBlockTemp1);
+        traversemove(connecter,connectBlockTemp1);
         
         int cbtemp = 0;
         for ( int i = 0 ; i < connectBlockTemp.size() ; i++ ){
@@ -628,19 +623,19 @@ void connectBlock(){
         
         //pointertemp.setPosition(allBlocktemp.getX()+allBlocktemp.getW()/4, allBlocktemp.getY()+allBlocktemp.getH()+ytemp);
         
-        allBlocktemp.addCommand(pointertemp.getNode());
+        connecter.addCommand(pointertemp.getNode());
         blockCheck = false;
         pointertemp = null;
-        allBlocktemp = null;
+        connecter = null;
         ytemp = 0;
       }
       
-      else if ( allBlocktemp.getname().equals("run") ){
-        pointertemp.setPosition(allBlocktemp.getX(), allBlocktemp.getY()+allBlocktemp.getH()+ytemp);
-        allBlocktemp.addCommand(pointertemp.getNode());
+      else if ( connecter.getname().equals("run") ){
+        pointertemp.setPosition(connecter.getX(), connecter.getY()+connecter.getH()+ytemp);
+        connecter.addCommand(pointertemp.getNode());
         blockCheck = false;
         pointertemp = null;
-        allBlocktemp = null;
+        connecter = null;
         ytemp = 0;
       }
     }
@@ -649,23 +644,23 @@ void connectBlock(){
 
 void disconnectBlock(){
   int index = 0;
-  if ( pointerdistemp != null && distemp != null ){
-    if ( blockdisCheck == true && distemp.inBlock() == false ) {
+  if ( pointerdistemp != null && father != null ){
+    if ( blockdisCheck == true && father.inBlock() == false ) {
       if ( released == true) {
-         if ( distemp.getname().equals("repeat") ){
-          childTemp1 = new ArrayList<Command>();                        //child of parent
-          traversemove(distemp,childTemp1);
-          for ( int i = 0 ; i < childTemp1.size() ; i++ ){
-            if ((Node) childTemp1.get(i) == pointerdistemp.getNode() ){
+         if ( father.getname().equals("repeat")  ){
+          childdiscon = new ArrayList<Command>();                        //child of parent
+          traversemove(father,childdiscon);
+          for ( int i = 0 ; i < childdiscon.size() ; i++ ){
+            if ((Node) childdiscon.get(i) == pointerdistemp.getNode() ){
               index = i;
               println("index = " + index );
-              println(childTemp1.get(i).getVal());
+              println(childdiscon.get(i).getVal());
             }
           }
-          distemp.removeCommand(pointerdistemp.getNode());
+          father.removeCommand(pointerdistemp.getNode());
           childTemp2 = new ArrayList<Command>();                        //child of parent but start from index after remove 
-          for ( int i = index+1 ; i < childTemp1.size() ; i++ ){
-            childTemp2.add(childTemp1.get(i));
+          for ( int i = index+1 ; i < childdiscon.size() ; i++ ){
+            childTemp2.add(childdiscon.get(i));
             //println(childTemp1.get(i));
           }
           //println("childtemp1later = " + childTemp1);
@@ -688,7 +683,7 @@ void disconnectBlock(){
           
           blockdisCheck = false;
           pointerdistemp = null;
-          distemp = null;
+          father = null;
           ydistemp = 0;
         }
       }
@@ -739,60 +734,6 @@ void sortBlockorder(){
     }
   } 
   //println("after Update" + allBlock);
-}
-
-
-Boolean checklowerBlock(Command Block_i){
-  Command upperBlock = Block_i;
-  int upper_X;
-  int upper_Y;
-  int upper_W;
-  int upper_H;
-  int lower_X;
-  int lower_Y;
-  for(int i = 0; i < allBlock.size(); i++){
-    upper_X = upperBlock.getX();
-    upper_Y = upperBlock.getY();
-    upper_W = upperBlock.getW();
-    upper_H = upperBlock.getH();
-    lower_X = allBlock.get(i).getX();
-    lower_Y = allBlock.get(i).getY();
-    if((lower_X == upper_X && lower_Y == upper_Y+upper_H) || (lower_X == upper_X+(upper_W/4) && lower_Y == upper_Y+upper_H) || (lower_X == upper_X-(upper_W/2) && lower_Y == upper_Y+upper_H)){
-      return true;
-    }
-  }
-  return false;
-}
-
-ArrayList<Command> dragTogether(Command Block_i ,ArrayList<Command> GroupBlock_){
-  Command upperBlock = Block_i;
-  ArrayList groupBlock = GroupBlock_;
-  int upper_X;
-  int upper_Y;
-  int upper_W;
-  int upper_H;
-  int lower_X;
-  int lower_Y;
-  for(int i = 0; i < allBlock.size(); i++){
-    upper_X = upperBlock.getX();
-    upper_Y = upperBlock.getY();
-    upper_W = upperBlock.getW();
-    upper_H = upperBlock.getH();
-    lower_X = allBlock.get(i).getX();
-    lower_Y = allBlock.get(i).getY();
-     
-    if((lower_X == upper_X && lower_Y == upper_Y+upper_H) || (lower_X == upper_X+(upper_W/4) && lower_Y == upper_Y+upper_H) || (lower_X == upper_X-(upper_W/4) && lower_Y == upper_Y+upper_H)){
-      groupBlock.add(allBlock.get(i));
-      dragTogether(allBlock.get(i), groupBlock);//recursive
-    }else if((lower_X == upper_X-(upper_W/4)*2 && lower_Y == upper_Y+upper_H)){
-      groupBlock.add(allBlock.get(i));
-      dragTogether(allBlock.get(i), groupBlock);//recursive
-    }else if((lower_X == upper_X+(upper_W/2) && lower_Y == upper_Y+upper_H)){ //right
-      groupBlock.add(allBlock.get(i));
-      dragTogether(allBlock.get(i), groupBlock);//recursive
-    }
-  }
-  return groupBlock;
 }
 
 void useBin(){
