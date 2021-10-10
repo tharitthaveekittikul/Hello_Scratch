@@ -61,11 +61,6 @@ class Motion extends Command{
     return motion.getvalChild(n);
   }
   
-  void setGroupSize(int groupsize_){
-    groupsize = 1 + groupsize_ ;
-
-  }
-  
   Node getnodeChild(int n){ // n = index in children
     return motion.getnodeChild(n);
   }

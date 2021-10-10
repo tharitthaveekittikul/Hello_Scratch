@@ -48,11 +48,6 @@ class Repeat extends Command{
     return h;
   }
   
-  void setGroupSize(int groupsize_){
-    groupsize = 1 + groupsize_ ;
-
-  }
-  
   void setPosition(int x_, int y_){
     x = x_;
     y = y_;

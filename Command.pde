@@ -4,7 +4,6 @@ class Command{
   ArrayList<Node> children;
   String name;
   String data;
-  int groupsize = 1;
   Node root;
   
   void addnewChild(String val){
@@ -54,10 +53,6 @@ class Command{
   int getH(){
     return h;
   }
-  
-  int getSize(){
-    return groupsize;
-  }
 
   Node getnodeChild(int n){ // n = index in children
     return children.get(n);
@@ -75,11 +70,7 @@ class Command{
     x = x_;
     y = y_;
   }
-  
-  void setGroupSize(int groupsize_){
-    groupsize = 1 + groupsize_ ;
-  }
-  
+ 
   void display(){
   }
   

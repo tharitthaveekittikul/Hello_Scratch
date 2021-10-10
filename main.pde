@@ -53,7 +53,7 @@ Command father, pointerdistemp, parenttemp;
 
 int my,mx,oldx,oldy;
 boolean released = true, blockCheck, blockdisCheck;
-ArrayList<Command> nodeTree, connectBlockTemp, childTemp, childdiscon, childTemp2, childpointerdisTemp, connectBlockTemp1;
+ArrayList<Command> nodeTree, pointerchild, childTemp, childdiscon, downchild, childpointerdisTemp, connectergroup;
 int ytemp, ydistemp, disconytemp;
 
 
@@ -104,6 +104,7 @@ void traverse(Command c){ //do command of start's child
       cat.setStep(c.getnodeChild(i).getvalChild(0));
       runCat();
       cat.Move();
+      
     }
     if ( c.getvalChild(i).equals("rotate") ){
       //cat.setAngle(c.getnodeChild(i).getvalChild(0));
@@ -156,7 +157,7 @@ Command nodeinClass(Node n){ //get class of that node
 
 Command getparent(Command c,Command cm){
   for (int i = 0 ; i < c.getchildSize() ; i++){
-    if ( c.getvalChild(i).equals("move") || c.getvalChild(i).equals("rotate") || c.getvalChild(i).equals("setX") || c.getvalChild(i).equals("setY") ){
+    if ( c.getvalChild(i).equals("move") || c.getvalChild(i).equals("rotate") || c.getvalChild(i).equals("setX") || c.getvalChild(i).equals("setY")){
       //println("Move by " + c.getnodeChild(i).getvalChild(0));
       if ( c.getnodeChild(i) == cm.getNode() ) {
         if ( c.getVal().equals("ifTRUE") || c.getVal().equals("ifFALSE")){
@@ -505,15 +506,13 @@ void checkconnectBlock(){ //first = pointer
     for ( int i = 0 ; i < allBlock.size() ; i++ ){
       if ( pointer != null && allBlock.get(i) != pointer){
         if ( pointer.contains() == true && allBlock.get(i).contains() == true ){
-          //println(allBlock.get(i).getname());
-          if ( allBlock.get(i).getname().equals("repeat") || allBlock.get(i).getname().equals("if")){
+          if ( allBlock.get(i).getname().equals("repeat") || allBlock.get(i).getname().equals("if") || allBlock.get(i).getname().equals("ifelse")){
             pointertemp = pointer;
             connecter = allBlock.get(i);
-            ytemp = 0;
-            traversemove(connecter,childTemp);//add child of 
+            ytemp  = 0;
+            traversemove(connecter,childTemp); // child of connecter 
             if ( childTemp != null ){
               for ( int j = 0 ; j < childTemp.size() ; j++ ){
-                
                 ytemp += 30;
               }
             }
@@ -556,72 +555,36 @@ void checkconnectBlock(){ //first = pointer
   }
 }
 
-void checkdisconnectBlock(){
-  if (mousePressed){
-    childdiscon = new ArrayList<Command>();
-    for ( int i = 0 ; i < allBlock.size() ; i++ ){
-      if ( pointer != null && allBlock.get(i) != null && allBlock.get(i) != pointer && getparent(allBlock.get(i),pointer) != null && pointer.contains() == true){
-        //println("getparent = " + getparent(allBlock.get(i),pointer)); 
-        father = getparent(allBlock.get(i),pointer);
-        pointerdistemp = pointer;
-        //traversemove(distemp,childTemp1);
-        //println("childTemp1 " + childTemp1);
-        //if ( childTemp1 != null ){
-        //  for ( int j = 0 ; j < childTemp1.size() ; j++ ){
-        //    ydistemp += 30;
-        //  }
-        //}
-        blockdisCheck = true;
-        break;
-      }        
-    }
-  }
-}
-
 void connectBlock(){
   if ( blockCheck == true && pointertemp.inBlock() == true && connecter.inBlock() == true ) {
-    if (released == true){ //released == true
+    if (released == true){
     println("allBlocktemp = " + connecter);
-      if ( connecter.getname().equals("repeat") ){
-        //println("hahaha " + allBlocktemp.getname());
-        //for ( int i = 1 ; i < allBlocktemp.getchildSize() ; i++ ){
-        //  //println(allBlocktemp.getnodeChild(i));
-        //  childytemp += allBlocktemp.getnodeChild(i).getY();
-        //}
-        //println("childytemp = " + ytemp);
+      if ( connecter.getname().equals("repeat") || connecter.getname().equals("if")){
+        
         int cbtempx = (connecter.getX()+connecter.getW()/4);
-        int cbtempy = (connecter.getY()+connecter.getH()+ytemp) + 30;
-        connectBlockTemp = new ArrayList<Command>();
-        //connectBlockTemp.add(pointertemp);
-        traversemove(pointertemp,connectBlockTemp);
+        int cbtempy = (connecter.getY()+connecter.getH()+ytemp)+30;
+        pointerchild = new ArrayList<Command>();
+
+        traversemove(pointertemp,pointerchild);
         pointertemp.setPosition(cbtempx,cbtempy-30);
         
-        connectBlockTemp1 = new ArrayList<Command>();
-        traversemove(connecter,connectBlockTemp1);
+        connectergroup = new ArrayList<Command>();
+        traversemove(connecter,connectergroup);
         
-        int cbtemp = 0;
-        for ( int i = 0 ; i < connectBlockTemp.size() ; i++ ){
-          for ( int j = 0 ; j < connectBlockTemp1.size() ; j++){
-            Command classtemp1 = nodeinClass((Node) connectBlockTemp.get(i));
-            if ( connectBlockTemp.get(i) == connectBlockTemp1.get(j) ){
-               cbtemp += 1;
-            }
-            
-            if ( getparent(pointertemp,classtemp1) != null && cbtemp > connectBlockTemp.size()+1){
-              parenttemp = getparent(pointertemp,classtemp1);
-              classtemp1.setPosition(parenttemp.getX()+30,cbtempy);
-            } else {
-               classtemp1.setPosition(cbtempx,cbtempy);
-            }
-            classtemp1.display();
-            //println(i + " " + connectBlockTemp.get(i));
-            //println(cbtempy);
-            cbtempy += 30;
+        int cbtemp_X = 0;
+        for ( int i = 0 ; i < pointerchild.size() ; i++ ){
+          for (int j = 0 ; j < allBlock.size() ; j++){
+          Command pointerchildclass = nodeinClass((Node) pointerchild.get(i));
+          if (getparent(allBlock.get(j),pointerchildclass) != null){ 
+             cbtemp_X += 1;
+             println(cbtemp_X);
           }
+          pointerchildclass.setPosition(cbtempx+(connecter.getW()/4*cbtemp_X),cbtempy);
+          }
+          cbtempy += 30;
+  
         }
-        
-        //pointertemp.setPosition(allBlocktemp.getX()+allBlocktemp.getW()/4, allBlocktemp.getY()+allBlocktemp.getH()+ytemp);
-        
+             
         connecter.addCommand(pointertemp.getNode());
         blockCheck = false;
         pointertemp = null;
@@ -641,8 +604,23 @@ void connectBlock(){
   }
 }
 
+void checkdisconnectBlock(){
+  if (mousePressed){
+    childdiscon = new ArrayList<Command>();
+    for ( int i = 0 ; i < allBlock.size() ; i++ ){
+      if ( pointer != null && allBlock.get(i) != null && allBlock.get(i) != pointer && getparent(allBlock.get(i),pointer) != null && pointer.contains() == true){
+        //println("getparent = " + getparent(allBlock.get(i),pointer)); 
+        father = getparent(allBlock.get(i),pointer);
+        pointerdistemp = pointer;
+        blockdisCheck = true;
+        break;
+      }        
+    }
+  }
+}
+
 void disconnectBlock(){
-  int index = 0;
+  int index = 0; // index of disconnecter 
   if ( pointerdistemp != null && father != null ){
     if ( blockdisCheck == true && father.inBlock() == false ) {
       if ( released == true) {
@@ -656,28 +634,21 @@ void disconnectBlock(){
               println(childdiscon.get(i).getVal());
             }
           }
-          father.removeCommand(pointerdistemp.getNode());
-          childTemp2 = new ArrayList<Command>();                        //child of parent but start from index after remove 
-          for ( int i = index+1 ; i < childdiscon.size() ; i++ ){
-            childTemp2.add(childdiscon.get(i));
-            //println(childTemp1.get(i));
-          }
-          //println("childtemp1later = " + childTemp1);
-          //for ( int j = 0 ; j < childTemp1.size() ; j++ ){
-          //  //ydistemp += 30;
-          //}
-          childpointerdisTemp = new ArrayList<Command>();
+          father.removeCommand(pointerdistemp.getNode()); //remove command that you hold 
+          
+          childpointerdisTemp = new ArrayList<Command>(); // child of pointerdisconneccter 
           traversemove(pointerdistemp,childpointerdisTemp);
-          int disconytemp = childpointerdisTemp.size()*30;
-          for ( int i = 0 ; i < childTemp2.size() ; i++){
-            for ( int j = 0 ; j < childpointerdisTemp.size() ; j++ ){
-              Command classtemp = nodeinClass((Node) childTemp2.get(i));
-              Command classtemp1 = childpointerdisTemp.get(j);
-              if ( classtemp != classtemp1 ){
-                classtemp.setPosition(classtemp.getX(), classtemp.getY()-30-disconytemp);
-              //classtemp.display();
-              }
-            }
+          
+          downchild = new ArrayList<Command>();             //child of parent that next to distconnecter 
+          for ( int i = index+childpointerdisTemp.size()+1 ; i < childdiscon.size() ; i++ ){
+            downchild.add(childdiscon.get(i));
+          }
+            
+          int discon_y = 30 + childpointerdisTemp.size()*30; // size for setposition child that next to disconnecter 
+          
+          for ( int i = 0 ; i < downchild.size() ; i++){
+           Command classtemp = nodeinClass((Node) downchild.get(i));
+           classtemp.setPosition(classtemp.getX(), classtemp.getY()-discon_y);
           }
           
           blockdisCheck = false;

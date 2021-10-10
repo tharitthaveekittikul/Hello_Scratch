@@ -90,11 +90,6 @@ class ConditionIfElse extends Command{
     return h;
   }
   
-  void setGroupSize(int groupsize_){
-    groupsize = 1 + groupsize_ ;
-
-  }
-  
   void setPosition(int x_, int y_){
     x = x_;
     y = y_;
@@ -117,7 +112,6 @@ class ConditionIfElse extends Command{
   }
   
   void display(){
-    offset = h*groupsize;
     fill(155,155,155);
     stroke(1);
     rect(x,y,w,h);
@@ -126,10 +120,10 @@ class ConditionIfElse extends Command{
     text( " If : " + variable1 +"  "+ operator +"  "+ variable2, x+10, y+15);
     fill(155,155,155);
     stroke(1);
-    rect(x,y+offset,w,h);
+    rect(x,y+h,w,h);
     fill(0);
     textSize(20);
-    text( " Else : ", x+5, y+offset+15); 
+    text( " Else : ", x+5, y+h+15); 
     
   }
   
