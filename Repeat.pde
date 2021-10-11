@@ -70,7 +70,7 @@ class Repeat extends Command{
   }
   
   void display(){
-    fill(155,155,155);
+    fill(#FED8B1);
     stroke(1);
     rect(x,y,w,h);
     fill(0);

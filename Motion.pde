@@ -25,7 +25,7 @@ class Motion extends Command{
   }
   
   void display(){
-    fill(155,155,155);
+    fill(#728FCE);
     stroke(1);
     rect(x,y,w,h);
     fill(0);

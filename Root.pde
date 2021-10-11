@@ -32,7 +32,7 @@ class Root extends Command{
   }
   
   void display(){
-    fill(155,155,155);
+    fill(#FAF884);
     stroke(1);
     rect(x,y,w,h);
     fill(0);
@@ -42,6 +42,10 @@ class Root extends Command{
   
   String getname(){
     return name;
+  }
+  
+  String getVal(){
+    return name; 
   }
   
   int getX(){

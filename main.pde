@@ -47,13 +47,13 @@ Command pointer;
 
 //chceckconnectblock
 Command connecter, pointertemp;
-Command father, pointerdistemp, parenttemp;
+Command father, pointerdistemp, parenttemp, ancestor, ancestortemp, fathertemp;
 
 
-
+int parentcount;
 int my,mx,oldx,oldy;
-boolean released = true, blockCheck, blockdisCheck;
-ArrayList<Command> nodeTree, pointerchild, childTemp, childdiscon, downchild, childpointerdisTemp, connectergroup;
+boolean released = true, blockCheck, blockdisCheck, ancestorcheck = false;
+ArrayList<Command> nodeTree, pointerchild, childTemp, childdiscon, downchild, childpointerdisTemp, connectergroup, childofancestor, downchildancestor;
 int ytemp, ydistemp, disconytemp;
 
 
@@ -156,6 +156,7 @@ Command nodeinClass(Node n){ //get class of that node
 }
 
 Command getparent(Command c,Command cm){
+  parentcount = 0;
   for (int i = 0 ; i < c.getchildSize() ; i++){
     if ( c.getvalChild(i).equals("move") || c.getvalChild(i).equals("rotate") || c.getvalChild(i).equals("setX") || c.getvalChild(i).equals("setY")){
       //println("Move by " + c.getnodeChild(i).getvalChild(0));
@@ -165,24 +166,25 @@ Command getparent(Command c,Command cm){
             return nodeinClass(temp);
             //break;
         }
-        //println("Found Laew Ja : " + c.getVal());
+        println("Found Laew Ja : " + nodeinClass(c.getNode()));
         return nodeinClass(c.getNode());
         //break;
       }
     }
     if ( c.getvalChild(i).equals("repeat") ){
       int number = Integer.parseInt(c.getnodeChild(i).getvalChild(0)); //n of repeat
-      println("Repeat by " + number );
+      //println("Repeat by " + number );
       if ( c.getnodeChild(i) == cm.getNode() ) {
         if ( c.getVal().equals("ifTRUE") || c.getVal().equals("ifFALSE")){
             println("Fond Laew Ja : " + temp.getVal());
             return nodeinClass(temp);
             //break;
         }
-        //println("Fond Laew Ja : " + c.getVal());
+        println("Fond Laew Ja : " + nodeinClass(c.getNode()));
         return nodeinClass(c.getNode());
         //break;
       }
+      parentcount += 1;
       getparent(c.getnodeChild(i),cm);
     }
     if ( c.getvalChild(i).equals("if") ){
@@ -194,10 +196,11 @@ Command getparent(Command c,Command cm){
             return nodeinClass(temp);
             //break;
           }
-          println("Fond Laew Ja : " + c.getVal());
+          println("Fond Laew Ja : " + nodeinClass(c.getNode()));
           return nodeinClass(c.getNode());
           //break;
         }
+        parentcount += 1;
         getparent(c.getnodeChild(i),cm); 
       }
     }
@@ -210,10 +213,11 @@ Command getparent(Command c,Command cm){
             return nodeinClass(temp);
             //break;
           }
-          println("Fond Laew Ja : " + c.getVal());
+          println("Fond Laew Ja : " + nodeinClass(c.getNode()));
           return nodeinClass(c.getNode());
           //break;
         }
+        parentcount += 1;
         getparent(c.getnodeChild(i).getnodeChild(1),cm); 
         getparent(c.getnodeChild(i).getnodeChild(2),cm);
       }
@@ -473,11 +477,13 @@ void draw(){
     if ( pointer != null ){ //if there is a pointer then drag it
       nodeTree = new ArrayList<Command>();
       traversemove(pointer,nodeTree);
-      pointer.drag();      
+      pointer.drag();
+      println("clicked = " + pointer);
       if (nodeTree != null){
         for ( int i = 0 ; i < nodeTree.size() ; i++ ){     
            nodeinClass((Node)nodeTree.get(i)).drag();
            nodeinClass((Node)nodeTree.get(i)).display();  
+           println("childclicked = " + nodeinClass((Node)nodeTree.get(i)));
         }
       }
     }
@@ -620,42 +626,141 @@ void checkdisconnectBlock(){
 }
 
 void disconnectBlock(){
-  int index = 0; // index of disconnecter 
+  //int index = 0; // index of disconnecter 
+  int indexancestor = 0;
   if ( pointerdistemp != null && father != null ){
     if ( blockdisCheck == true && father.inBlock() == false ) {
       if ( released == true) {
-         if ( father.getname().equals("repeat")  ){
-          childdiscon = new ArrayList<Command>();                        //child of parent
-          traversemove(father,childdiscon);
-          for ( int i = 0 ; i < childdiscon.size() ; i++ ){
-            if ((Node) childdiscon.get(i) == pointerdistemp.getNode() ){
-              index = i;
-              println("index = " + index );
-              println(childdiscon.get(i).getVal());
+         //if ( father.getname().equals("repeat") || father.getname().equals("run")  ){
+          //childdiscon = new ArrayList<Command>();                        //child of parent
+          //traversemove(father,childdiscon);
+          //for ( int i = 0 ; i < childdiscon.size() ; i++ ){
+          //  if ((Node) childdiscon.get(i) == pointerdistemp.getNode() ){
+          //    index = i;
+          //    println("index = " + index );
+          //    println(childdiscon.get(i).getVal());
+          //  }
+          //}
+          //father.removeCommand(pointerdistemp.getNode()); //remove command that you hold 
+          
+         childpointerdisTemp = new ArrayList<Command>(); // child of pointerdisconneccter 
+         traversemove(pointerdistemp,childpointerdisTemp);
+          
+          //downchild = new ArrayList<Command>();             //child of parent that next to distconnecter 
+          //for ( int i = index+childpointerdisTemp.size()+1 ; i < childdiscon.size() ; i++ ){
+          //  downchild.add(childdiscon.get(i));
+          //}
+            
+         int discon_y = 30 + childpointerdisTemp.size()*30; // size for setposition child that next to disconnecter 
+         println(discon_y);
+          //for ( int i = 0 ; i < downchild.size() ; i++){
+          // Command classtemp = nodeinClass((Node) downchild.get(i));
+          // classtemp.setPosition(classtemp.getX(), classtemp.getY()-discon_y);
+          //}
+          
+         ancestor = father;
+          
+         childofancestor = new ArrayList<Command>();
+         downchildancestor = new ArrayList<Command>();
+         println("pointerdistemp = " + pointerdistemp);
+          //for ( int i = 0 ; i < allBlock.size() ; i++ ){
+          //  //println(allBlock.get(i));
+          //  //Command parentpointer = getparent(allBlock.get(i),ancestor);
+          //  //ancestor = getparent(allBlock.get(i),fathertemp);
+            
+          //  //if ( ancestor != null ){
+          //  //  println("yooooo");
+          //  //  do {
+          //  //    ancestortemp = ancestor;
+          //  //    println("ancestortemp = " + ancestortemp);
+          //  //    ancestor = getparent(allBlock.get(i),ancestortemp);
+          //  //    println("ancestor = " + ancestor);
+          //  //    println("while loop");
+          //  //  } while ( ancestor != null );
+          //  //}            
+          //}
+          
+          //do {
+          //  for ( int i = 0 ; i < allBlock.size() ; i++){
+          //    println("1:" + ancestor);
+          //    ancestor = getparent(allBlock.get(i),ancestor);
+          //    println("2:" + ancestor);
+          //    if ( ancestor != null ){
+          //      println(ancestor);
+          //      break; 
+          //    }
+          //  }
+          //} while ( ancestor != null );
+          
+         for ( int i = 0 ; i < allBlock.size() ; i++ ){
+           //println(allBlock.get(i));
+           traversemove(allBlock.get(i),childofancestor);
+           //println("ewfoefe " + childofancestor.size());
+           for ( int j = 0 ; j < childofancestor.size(); j++ ){
+              if ( pointerdistemp == nodeinClass((Node) childofancestor.get(j))){
+                //println("emgaikramegopmreoapopegr");
+                ancestortemp = allBlock.get(i);
+                ancestorcheck = true;
+                break;
+              }
+           }
+           if ( ancestorcheck == true ){
+             println("number " + i);
+             break; 
+           }
+         }
+          
+          //ancestortemp = ancestor;
+          //if ( ancestor == null ){
+         println("ancestorfinish = " + ancestortemp);
+          //traversemove(ancestortemp,childofancestor);
+         println(childofancestor.size());
+         println("-------");
+         for ( int j = 0 ; j < childofancestor.size() ; j++ ){
+           println(nodeinClass((Node)childofancestor.get(j)));
+             if ( pointerdistemp == nodeinClass((Node)childofancestor.get(j)) ){
+              //println(childofancestor.get(j));
+               indexancestor = j;
+               println(indexancestor);
+               indexancestor += childpointerdisTemp.size();
+               println(indexancestor);
+               break;
+             }
+          }
+         
+          for ( int k = indexancestor+1 ; k < childofancestor.size() ; k++ ){
+            downchildancestor.add(childofancestor.get(k));
+          }
+         
+          for ( int h = 0 ; h < downchildancestor.size() ; h++){
+            Command classtempan = nodeinClass((Node) downchildancestor.get(h));
+            println("downchild = " + classtempan);
+            if ( childpointerdisTemp.size() != 0 ){
+              for ( int m = 0 ; m < childpointerdisTemp.size() ; m++){
+                Command childpointertemp = nodeinClass( (Node) childpointerdisTemp.get(m));
+                println("childpointer =  " + childpointertemp);
+                if ( classtempan != pointerdistemp && classtempan != childpointertemp ){
+                  //println("dooooooooooa");
+                  classtempan.setPosition(classtempan.getX(), classtempan.getY()-discon_y);
+                  break;
+                }
+              }
+            }
+            else {
+             if ( classtempan != pointerdistemp){
+                //println("doooooooooob");
+                classtempan.setPosition(classtempan.getX(), classtempan.getY()-discon_y);
+              }
             }
           }
-          father.removeCommand(pointerdistemp.getNode()); //remove command that you hold 
-          
-          childpointerdisTemp = new ArrayList<Command>(); // child of pointerdisconneccter 
-          traversemove(pointerdistemp,childpointerdisTemp);
-          
-          downchild = new ArrayList<Command>();             //child of parent that next to distconnecter 
-          for ( int i = index+childpointerdisTemp.size()+1 ; i < childdiscon.size() ; i++ ){
-            downchild.add(childdiscon.get(i));
-          }
-            
-          int discon_y = 30 + childpointerdisTemp.size()*30; // size for setposition child that next to disconnecter 
-          
-          for ( int i = 0 ; i < downchild.size() ; i++){
-           Command classtemp = nodeinClass((Node) downchild.get(i));
-           classtemp.setPosition(classtemp.getX(), classtemp.getY()-discon_y);
-          }
-          
+          //}
+          father.removeCommand(pointerdistemp.getNode());
           blockdisCheck = false;
           pointerdistemp = null;
           father = null;
+          ancestorcheck = false;
           ydistemp = 0;
-        }
+        //}
       }
     }
   }
